@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import BottomBar from './bottomBar';
 
 export default function Home() {
+  const [selectedTab, setSelectedTab] = useState('Calendar');
   const [selectedDate, setSelectedDate] = useState(null);
   
   // Mock data for mood tracking
@@ -54,29 +56,139 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-500 p-4">
-      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="bg-blue-400 p-6 text-white">
-          <div className="bg-blue-300 rounded-2xl p-4 mb-4">
-            <p className="text-sm">
-              Hey there, take a deep breath — you're doing better than you think! 
-              Ready to check in and lighten your load today?
-            </p>
-          </div>
-          
-          <div className="flex space-x-2 mb-4">
-            <button className="bg-white text-blue-400 px-4 py-2 rounded-full text-sm font-medium">
-              Calendar
-            </button>
-            <button className="text-white px-4 py-2 rounded-full text-sm">
-              Mood Analysis
-            </button>
-            <button className="text-white px-4 py-2 rounded-full text-sm">
-              Period Tracker
-            </button>
-          </div>
-        </div>
+    <div 
+      className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-500 p-4 relative"
+      style={{ fontFamily: "'Canva Sans', sans-serif", paddingBottom: '84.6px' }}
+    >
+      {/* Blue rounded rectangle */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '-55px',
+          width: '100%',
+          height: '180px',
+          backgroundColor: '#38b6ff',
+          borderRadius: '40px',
+          transform: 'translateX(-50%)',
+          zIndex: 10,
+        }}
+        ></div>
+      {/* White rounded rectangle for message */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '10px',
+          width: '85%',
+          maxWidth: '361.3px',
+          height: '62px',
+          backgroundColor: '#fff',
+          borderRadius: '24px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 20,
+          padding: '0 16px',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <p
+          className="text-sm text-gray-800 text-center"
+          style={{ lineHeight: '1.3', 
+                  fontFamily: "'Canva Sans', sans-serif",
+                  fontSize: '14px'
+                 }}
+        >
+          Hey there, take a deep breath — you're doing better than you think!<br />
+          Ready to check in and lighten your load today?
+        </p>
+      </div>
+      {/* Editable journal input in white rounded rectangle */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '29.1px',
+          top: '88.4px',
+          width: '168.5px',
+          height: '25.2px',
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 21,
+          padding: '0 8px',
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Add today's journal..."
+          style={{
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            outline: 'none',
+            background: 'transparent',
+            color: '#222', // Text color when typing
+            fontSize: '12px',
+            fontFamily: "'Canva Sans', sans-serif",
+          }}
+          className="placeholder-journal"
+        />
+        <style>
+          {`
+            .placeholder-journal::placeholder {
+              color: #c8c8c8;
+              font-family: 'Canva Sans', sans-serif;
+            }
+          `}
+        </style>
+      </div>
+      {/* Button group below blue rectangle */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '140px', // Adjust as needed to sit below blue rectangle
+          width: '360.4px',
+          height: '46.7px',
+          backgroundColor: '#f5f6f7',
+          borderRadius: '18px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          zIndex: 22,
+          transform: 'translateX(-50%)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}
+      >
+        {['Calendar', 'Mood Analysis', 'Period Tracker'].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setSelectedTab(tab)}
+            style={{
+              border: 'none',
+              background: selectedTab === tab ? '#38b6ff' : 'transparent',
+              color: selectedTab === tab ? '#fff' : '#939598',
+              fontSize: '13px',
+              fontFamily: "'Canva Sans', sans-serif",
+              borderRadius: '14px',
+              padding: '8px 18px',
+              boxShadow: selectedTab === tab ? '0 2px 8px rgba(56,182,255,0.18)' : 'none',
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      {/* Main content */}
+      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden" style={{marginTop: '0px'}}>
 
         {/* Calendar Section */}
         <div className="p-6">
@@ -121,24 +233,8 @@ export default function Home() {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="flex justify-center space-x-8 p-6 border-t border-gray-200">
-          <button className="p-3 rounded-full">
-            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
-          </button>
-          <button className="p-3 rounded-full">
-            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7H3v2h2v13h14V6h2V4h-4V2H7v2H3zm2 2v11H5V6h12z"/>
-            </svg>
-          </button>
-          <button className="p-3 rounded-full">
-            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-          </button>
-        </div>
       </div>
+      <BottomBar />
     </div>
   );
 }
