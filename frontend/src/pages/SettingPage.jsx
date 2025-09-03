@@ -1,3 +1,5 @@
+import BottomBar from './bottomBar';
+
 export default function SettingPage() {
   return (
     <div>

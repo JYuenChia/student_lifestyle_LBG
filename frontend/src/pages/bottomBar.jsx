@@ -6,14 +6,19 @@ export default function BottomBar() {
 
   const icons = [
     { name: 'chat', src: '/chat.png', alt: 'Chat', to: '/chat' },
-    { name: 'community', src: '/community.png', alt: 'Community', to: '/discussion' },
+    { name: 'discussion', src: '/community.png', alt: 'Discussion', to: '/discussion' },
     { name: 'home', src: '/home.png', alt: 'Home', to: '/' },
     { name: 'goal', src: '/goal.png', alt: 'Goal', to: '/todo' },
-    { name: 'settings', src: '/settings.png', alt: 'Settings', to: '/settings' },
+    { name: 'settings', src: '/settings.png', alt: 'Settings', to: '/setting' },
   ];
 
   // Determine selected icon based on current route
-  const selected = icons.find(icon => icon.to === location.pathname)?.name || 'home';
+  const selected = (() => {
+    if (location.pathname === '/profile') {
+      return 'discussion'; // Highlight Discussion when on Profile page
+    }
+    return icons.find(icon => icon.to === location.pathname)?.name || 'home';
+  })();
 
   return (
     <div

@@ -4,12 +4,13 @@ import '@fontsource/inter';
 import '@fontsource/jetbrains-mono';
 import '@fontsource/source-serif-4';
 import './index.css';
-import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MessagePage from './pages/Chat.jsx';
 import DiscussionPage from './pages/Discussion.jsx';
 import HomePage from './pages/Home.jsx';
-import TodoListPage from './pages/Todo.jsx';
+import TodoListPage from './pages/ToDo.jsx';
 import SettingPage from './pages/SettingPage.jsx';
+import Profile from './pages/Profile.jsx';
 import BottomBar from './pages/bottomBar';
 
 function MainLayout() {
@@ -20,8 +21,9 @@ function MainLayout() {
           <Route path="/" element={<HomePage />} />
           <Route path="/message" element={<MessagePage />} />
           <Route path="/discussion" element={<DiscussionPage />} />
-          <Route path="/todolist" element={<TodoListPage />} />
+          <Route path="/todo" element={<TodoListPage />} />
           <Route path="/setting" element={<SettingPage />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
       <BottomBar />
