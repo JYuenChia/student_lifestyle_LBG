@@ -1,4 +1,10 @@
 import { useState } from 'react';
+// import messageIcon from '../assets/images/message-icon.png';
+// import communityIcon from '../assets/images/community-icon.png';
+// import homeIcon from '../assets/images/home-icon.png';
+// import todoIcon from '../assets/images/to-do-list.png';
+// import settingIcon from '../assets/images/setting.png';
+
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -39,10 +45,10 @@ export default function Home() {
       days.push(
         <div
           key={day}
-          className="h-12 flex flex-col items-center justify-center border rounded-md cursor-pointer hover:bg-gray-50 relative"
+          className="h-12 flex flex-col items-center justify-center border border-border rounded-md cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors relative"
           onClick={() => setSelectedDate(day)}
         >
-          <span className="text-sm font-medium">{day}</span>
+          <span className="text-sm font-medium text-foreground">{day}</span>
           {mood && (
             <span className="text-xs absolute -top-1 -right-1">{mood}</span>
           )}
@@ -54,11 +60,11 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-500 p-4">
-      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden">
+    <div className="min-h-screen bg-background p-4">
+      <div className="max-w-md mx-auto bg-card rounded-3xl shadow-xl overflow-hidden border border-border">
         {/* Header */}
-        <div className="bg-blue-400 p-6 text-white">
-          <div className="bg-blue-300 rounded-2xl p-4 mb-4">
+        <div className="bg-primary p-6 text-primary-foreground">
+          <div className="bg-primary/80 rounded-2xl p-4 mb-4 backdrop-blur-sm">
             <p className="text-sm">
               Hey there, take a deep breath — you're doing better than you think! 
               Ready to check in and lighten your load today?
@@ -66,23 +72,23 @@ export default function Home() {
           </div>
           
           <div className="flex space-x-2 mb-4">
-            <button className="bg-white text-blue-400 px-4 py-2 rounded-full text-sm font-medium">
+            <button className="bg-primary-foreground text-primary px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground transition-colors">
               Calendar
             </button>
-            <button className="text-white px-4 py-2 rounded-full text-sm">
+            <button className="text-primary-foreground/80 px-4 py-2 rounded-full text-sm hover:text-primary-foreground hover:bg-primary/20 transition-colors">
               Mood Analysis
             </button>
-            <button className="text-white px-4 py-2 rounded-full text-sm">
+            <button className="text-primary-foreground/80 px-4 py-2 rounded-full text-sm hover:text-primary-foreground hover:bg-primary/20 transition-colors">
               Period Tracker
             </button>
           </div>
         </div>
 
         {/* Calendar Section */}
-        <div className="p-6">
+        <div className="p-6 bg-card">
           <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-2">Calendar</h2>
-            <p className="text-gray-600 text-sm">November 2025</p>
+            <h2 className="text-xl font-bold text-foreground mb-2">Calendar</h2>
+            <p className="text-muted-foreground text-sm">November 2025</p>
           </div>
 
           {/* Calendar Grid */}
@@ -90,7 +96,7 @@ export default function Home() {
             {/* Week headers */}
             <div className="grid grid-cols-7 gap-2 mb-2">
               {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                <div key={day} className="h-8 flex items-center justify-center text-sm font-medium text-gray-500">
+                <div key={day} className="h-8 flex items-center justify-center text-sm font-medium text-muted-foreground">
                   {day}
                 </div>
               ))}
@@ -104,39 +110,20 @@ export default function Home() {
 
           {/* Journal Section */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4">
+            <h3 className="text-lg font-bold text-foreground mb-4">
               My Journal on {journalEntries[0].date}...
             </h3>
             
             <div className="space-y-3">
               {journalEntries[0].entries.map((entry, index) => (
-                <div key={index} className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-sm text-gray-700 leading-relaxed">
+                <div key={index} className="bg-muted rounded-lg p-3 border border-border">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     "{entry}"
                   </p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Bottom Navigation */}
-        <div className="flex justify-center space-x-8 p-6 border-t border-gray-200">
-          <button className="p-3 rounded-full">
-            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
-          </button>
-          <button className="p-3 rounded-full">
-            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7H3v2h2v13h14V6h2V4h-4V2H7v2H3zm2 2v11H5V6h12z"/>
-            </svg>
-          </button>
-          <button className="p-3 rounded-full">
-            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-          </button>
         </div>
       </div>
     </div>
