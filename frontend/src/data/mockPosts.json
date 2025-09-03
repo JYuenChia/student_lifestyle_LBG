@@ -1,14 +1,14 @@
 [
   {
     "id": 1,
-    "user": "Bella",
+    "user": "N",
     "avatar": "https://via.placeholder.com/40",
     "content": "Do you guys study with friends or solo? I feel less stressed with people around but also get distracted lol.",
-    "image": "https://via.placeholder.com/300x200",
+    "image": "study1.jpg",
     "time": "2h ago",
     "likes": 123,
-    "comments": 456,
-    "isLiked": true
+    "comments": 0,
+    "isLiked": false
   },
   {
     "id": 2,
@@ -16,8 +16,8 @@
     "avatar": "https://via.placeholder.com/40",
     "content": "Drop your fav comfort food when you're stressed 😌🍕🍝",
     "time": "3h ago",
-    "likes": 123,
-    "comments": 456,
+    "likes": 19,
+    "comments": 0,
     "isLiked": false
   },
   {
@@ -27,7 +27,7 @@
     "content": "Just finished my chemistry assignment! Who else is struggling with organic chemistry? Need some tips 📚",
     "time": "5h ago",
     "likes": 89,
-    "comments": 234,
+    "comments": 0,
     "isLiked": false
   },
   {
@@ -37,18 +37,18 @@
     "content": "Late night study session again... Coffee is my best friend now ☕️ Anyone else pulling an all-nighter?",
     "time": "6h ago",
     "likes": 156,
-    "comments": 78,
-    "isLiked": true
+    "comments": 0,
+    "isLiked": false
   },
   {
     "id": 5,
     "user": "Emma",
     "avatar": "https://via.placeholder.com/40",
     "content": "Found this amazing study spot at the library! Perfect lighting and so quiet. What's your favorite place to study?",
-    "image": "https://via.placeholder.com/300x150",
+    "image": "study-corner.jpg",
     "time": "8h ago",
     "likes": 201,
-    "comments": 92,
+    "comments": 0,
     "isLiked": false
   }
 ]

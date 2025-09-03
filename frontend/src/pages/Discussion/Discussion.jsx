@@ -10,12 +10,32 @@ import bookmarkIcon from '../../assets/images/bookmark.png';
 import bookmarkClickedIcon from '../../assets/images/bookmark-clicked.png';
 import mockPosts from '../../data/mockPosts.json';
 
+// Dynamic image loading with Vite
+const images = import.meta.glob('../../assets/images/*.{jpg,jpeg,png,gif}', { eager: true });
+
 export default function Discussion() {
   const [selectedTab, setSelectedTab] = useState('Discussion');
   const [posts, setPosts] = useState(mockPosts.map(post => ({ ...post, isBookmarked: false })));
   const [newComment, setNewComment] = useState('');
   const [activeCommentPost, setActiveCommentPost] = useState(null);
   const navigate = useNavigate();
+
+  // Helper function to get the correct image source
+  const getImageSrc = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    
+    // Remove leading ../../ if present and get just the filename
+    const cleanPath = imagePath.replace(/^(\.\.\/)+/, '').replace(/^assets\/images\//, '');
+    
+    // Find the image in the glob
+    for (const key in images) {
+      if (key.includes(cleanPath)) {
+        return images[key].default || images[key];
+      }
+    }
+    return null;
+  };
 
   const handleLike = (postId) => {
     setPosts(posts.map(post => 
@@ -136,16 +156,36 @@ export default function Discussion() {
       {post.image && (
         <div style={{
           width: '100%',
-          height: '200px',
-          backgroundColor: '#f5f5f5',
           borderRadius: '8px',
           marginBottom: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#999'
+          overflow: 'hidden'
         }}>
-          [Image placeholder]
+          <img 
+            src={getImageSrc(post.image)}
+            alt="Post"
+            style={{
+              width: '100%',
+              height: '200px',
+              objectFit: 'cover',
+              borderRadius: '8px'
+            }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+          <div style={{
+            width: '100%',
+            height: '200px',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '8px',
+            display: 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#999'
+          }}>
+            [Image not found]
+          </div>
         </div>
       )}
 
