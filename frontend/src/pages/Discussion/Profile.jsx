@@ -7,11 +7,11 @@ export default function Profile() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
       {/* Return button at top left */}
-      <div style={{ position: 'absolute', top: '15px', left: '20px', zIndex: 30 }}>
+      <div style={{ position: 'absolute', top: '15px', left: '1px', zIndex: 30 }}>
         <button 
           onClick={() => navigate(-1)}
           style={{ 
-            background: 'rgba(0,0,0,0.1)', 
+            background: 'transparent', 
             border: 'none', 
             cursor: 'pointer',
             outline: 'none',
@@ -30,7 +30,7 @@ export default function Profile() {
       {/* Main content area */}
       <div style={{ 
         padding: '60px 20px 20px',
-        backgroundColor: '#f9f9f9',
+        backgroundColor: 'transparent',
         minHeight: 'calc(100vh - 120px)'
       }}>
         <h2 style={{ color: 'black', fontSize: '24px' }}>Profile Page</h2>
