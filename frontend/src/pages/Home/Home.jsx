@@ -3,6 +3,8 @@ import { useState } from 'react';
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState('Calendar');
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState('November');
+  const [selectedYear, setSelectedYear] = useState('2025');
   
   // Mock data for mood tracking
   const moodData = {
@@ -24,33 +26,110 @@ export default function Home() {
     }
   ];
 
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const years = ['2023', '2024', '2025', '2026', '2027'];
+
+  // Helper to get days in month and first day of week for any year/month
+  function getMonthMeta(monthName, year) {
+    const monthIndex = months.indexOf(monthName);
+    const date = new Date(Number(year), monthIndex, 1);
+    const daysInMonth = new Date(Number(year), monthIndex + 1, 0).getDate();
+    const firstDay = date.getDay(); // 0=Sunday, 1=Monday, ...
+    return { daysInMonth, firstDay };
+  }
+
+  // Helper to get journal for selected date
+  function getJournalForSelectedDate() {
+    if (!selectedDate) return null;
+    const selectedDateStr = `${selectedDate} ${selectedMonth} ${selectedYear}`;
+    const entry = journalEntries.find(j =>
+      j.date === selectedDateStr
+    );
+    return entry ? entry.entries : null;
+  }
+
   const generateCalendar = () => {
-    const daysInMonth = 30; // November has 30 days
-    const firstDay = 5; // November 1, 2025 starts on Saturday
+    const { daysInMonth, firstDay } = getMonthMeta(selectedMonth, selectedYear);
     const days = [];
-    
-    // Add empty cells for days before month starts
-    for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="h-12"></div>);
+    const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+    for (let i = 0; i < totalCells; i++) {
+      const day = i - firstDay + 1;
+      if (i < firstDay || day > daysInMonth) {
+        days.push(
+          <div
+            key={`empty-${i}`}
+            style={{
+              width: '44px',
+              height: '44px',
+              minWidth: '44px',
+              minHeight: '44px',
+              background: '#f5f6f7',
+              borderRadius: '10px',
+              border: '1px solid #e0e3e7'
+            }}
+          ></div>
+        );
+      } else {
+        const mood = moodData[day];
+        const isSelected =
+          selectedDate === day &&
+          selectedMonth === months[new Date(Number(selectedYear), months.indexOf(selectedMonth), 1).getMonth()] &&
+          selectedYear === String(selectedYear);
+        days.push(
+          <div
+            key={day}
+            className="cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
+            onClick={() => setSelectedDate(day)}
+            style={{
+              width: '44px',
+              height: '44px',
+              minWidth: '44px',
+              minHeight: '44px',
+              background: "#fff",
+              borderRadius: '10px',
+              border: isSelected
+                ? '2.5px solid #38b6ff'
+                : '1.5px solid #e0e3e7',
+              position: 'relative',
+              boxShadow: '0 1px 4px rgba(56,182,255,0.04)'
+            }}
+          >
+            {/* Date at upper left */}
+            <span
+              style={{
+                position: 'absolute',
+                top: '6px',
+                left: '8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                color: '#222'
+              }}
+            >
+              {day}
+            </span>
+            {/* Emoji centered */}
+            {mood && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: '20px'
+                }}
+              >
+                {mood}
+              </span>
+            )}
+          </div>
+        );
+      }
     }
-    
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const mood = moodData[day];
-      days.push(
-        <div
-          key={day}
-          className="h-12 flex flex-col items-center justify-center border border-border rounded-md cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors relative"
-          onClick={() => setSelectedDate(day)}
-        >
-          <span className="text-sm font-medium text-foreground">{day}</span>
-          {mood && (
-            <span className="text-xs absolute -top-1 -right-1">{mood}</span>
-          )}
-        </div>
-      );
-    }
-    
+
     return days;
   };
 
@@ -59,26 +138,21 @@ export default function Home() {
       className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-500 p-4 relative"
       style={{ fontFamily: "'Canva Sans', sans-serif", paddingBottom: '84.6px' }}
     >
-      {/* Blue rounded rectangle */}
+      {/* Blue rounded rectangle (now in normal flow) */}
       <div
         style={{
-          position: 'absolute',
-          left: '50%',
-          top: '-55px',
           width: '100%',
           height: '180px',
           backgroundColor: '#38b6ff',
           borderRadius: '40px',
-          transform: 'translateX(-50%)',
+          margin: '0 auto',
+          marginTop: '-55px',
           zIndex: 10,
         }}
-        ></div>
-      {/* White rounded rectangle for message */}
+      ></div>
+      {/* White rounded rectangle for message (now in normal flow) */}
       <div
         style={{
-          position: 'absolute',
-          left: '50%',
-          top: '10px',
           width: '85%',
           maxWidth: '361.3px',
           height: '62px',
@@ -90,7 +164,9 @@ export default function Home() {
           justifyContent: 'center',
           zIndex: 20,
           padding: '0 16px',
-          transform: 'translateX(-50%)',
+          margin: '0 auto',
+          marginTop: '-140px',
+          position: 'relative',
         }}
       >
         <p
@@ -104,12 +180,9 @@ export default function Home() {
           Ready to check in and lighten your load today?
         </p>
       </div>
-      {/* Editable journal input in white rounded rectangle */}
+      {/* Editable journal input in white rounded rectangle (now in normal flow) */}
       <div
         style={{
-          position: 'absolute',
-          left: '29.1px',
-          top: '88.4px',
           width: '168.5px',
           height: '25.2px',
           backgroundColor: '#fff',
@@ -120,6 +193,7 @@ export default function Home() {
           justifyContent: 'center',
           zIndex: 21,
           padding: '0 8px',
+          margin: '16px auto 0 auto',
         }}
       >
         <input
@@ -131,7 +205,7 @@ export default function Home() {
             border: 'none',
             outline: 'none',
             background: 'transparent',
-            color: '#222', // Text color when typing
+            color: '#222',
             fontSize: '12px',
             fontFamily: "'Canva Sans', sans-serif",
           }}
@@ -146,12 +220,9 @@ export default function Home() {
           `}
         </style>
       </div>
-      {/* Button group below blue rectangle */}
+      {/* Button group below blue rectangle (now in normal flow) */}
       <div
         style={{
-          position: 'absolute',
-          left: '50%',
-          top: '140px', // Adjust as needed to sit below blue rectangle
           width: '360.4px',
           height: '46.7px',
           backgroundColor: '#f5f6f7',
@@ -160,8 +231,8 @@ export default function Home() {
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 22,
-          transform: 'translateX(-50%)',
           boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          margin: '24px auto 0 auto',
         }}
       >
         {['Calendar', 'Mood Analysis', 'Period Tracker'].map(tab => (
@@ -187,49 +258,245 @@ export default function Home() {
         ))}
       </div>
       {/* Main content */}
-      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden" style={{marginTop: '0px'}}>
-
-        {/* Calendar Section */}
-        <div className="p-6 bg-card">
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-foreground mb-2">Calendar</h2>
-            <p className="text-muted-foreground text-sm">November 2025</p>
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="mb-6">
-            {/* Week headers */}
-            <div className="grid grid-cols-7 gap-2 mb-2">
-              {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                <div key={day} className="h-8 flex items-center justify-center text-sm font-medium text-muted-foreground">
-                  {day}
+      <div
+        className="max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden"
+        style={{ marginTop: '32px' }}
+      >
+        {/* Main content under tab selection */}
+        {selectedTab === 'Calendar' && (
+          <div className="p-6 bg-card">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-foreground mb-2">Calendar</h2>
+              {/* Month/year selection bar - improved UI */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  background: '#f5f6f7',
+                  borderRadius: '14px',
+                  padding: '0 20px',
+                  height: '48px',
+                  width: 'fit-content',
+                  minWidth: '220px',
+                  marginBottom: '12px',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                  border: '1.5px solid #e0e3e7',
+                  gap: '12px',
+                  fontFamily: "'Canva Sans', sans-serif",
+                  position: 'relative',
+                }}
+              >
+                {/* Calendar icon */}
+                <span style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginRight: '6px',
+                  color: '#38b6ff',
+                  fontSize: '20px'
+                }}>
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="16" rx="4" fill="#e3f4fd"/>
+                    <rect x="3" y="8" width="18" height="13" rx="2" fill="#fff"/>
+                    <rect x="3" y="8" width="18" height="13" rx="2" stroke="#38b6ff" strokeWidth="1.5"/>
+                    <rect x="7" y="2" width="2" height="6" rx="1" fill="#38b6ff"/>
+                    <rect x="15" y="2" width="2" height="6" rx="1" fill="#38b6ff"/>
+                  </svg>
+                </span>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <select
+                    value={selectedMonth}
+                    onChange={e => setSelectedMonth(e.target.value)}
+                    style={{
+                      border: '1px solid #d1eaff',
+                      background: '#fff',
+                      fontSize: '16px',
+                      fontWeight: 600,
+                      fontFamily: "'Canva Sans', sans-serif",
+                      color: '#222',
+                      outline: 'none',
+                      cursor: 'pointer',
+                      padding: '8px 32px 8px 12px',
+                      borderRadius: '8px',
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      boxShadow: '0 1px 4px rgba(56,182,255,0.07)',
+                      transition: 'border 0.2s',
+                    }}
+                    className="custom-dropdown"
+                  >
+                    {months.map(month => (
+                      <option key={month} value={month} style={{
+                        fontWeight: 500,
+                        color: '#222',
+                        fontFamily: "'Canva Sans', sans-serif",
+                        background: selectedMonth === month ? '#e3f4fd' : '#fff',
+                        color: selectedMonth === month ? '#38b6ff' : '#222',
+                      }}>{month}</option>
+                    ))}
+                  </select>
+                  {/* Custom dropdown arrow */}
+                  <span style={{
+                    position: 'absolute',
+                    right: '12px',
+                    pointerEvents: 'none',
+                    color: '#38b6ff',
+                    fontSize: '16px',
+                  }}>▼</span>
                 </div>
-              ))}
-            </div>
-            
-            {/* Calendar days */}
-            <div className="grid grid-cols-7 gap-2">
-              {generateCalendar()}
-            </div>
-          </div>
-
-          {/* Journal Section */}
-          <div>
-            <h3 className="text-lg font-bold text-foreground mb-4">
-              My Journal on {journalEntries[0].date}...
-            </h3>
-            
-            <div className="space-y-3">
-              {journalEntries[0].entries.map((entry, index) => (
-                <div key={index} className="bg-muted rounded-lg p-3 border border-border">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    "{entry}"
-                  </p>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <select
+                    value={selectedYear}
+                    onChange={e => setSelectedYear(e.target.value)}
+                    style={{
+                      border: '1px solid #d1eaff',
+                      background: '#fff',
+                      fontSize: '16px',
+                      fontWeight: 600,
+                      fontFamily: "'Canva Sans', sans-serif",
+                      color: '#38b6ff',
+                      outline: 'none',
+                      cursor: 'pointer',
+                      padding: '8px 32px 8px 12px',
+                      borderRadius: '8px',
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      boxShadow: '0 1px 4px rgba(56,182,255,0.07)',
+                      transition: 'border 0.2s',
+                    }}
+                    className="custom-dropdown"
+                  >
+                    {years.map(year => (
+                      <option key={year} value={year} style={{
+                        fontWeight: 500,
+                        color: '#38b6ff',
+                        fontFamily: "'Canva Sans', sans-serif",
+                        background: selectedYear === year ? '#e3f4fd' : '#fff',
+                        color: selectedYear === year ? '#38b6ff' : '#222',
+                      }}>{year}</option>
+                    ))}
+                  </select>
+                  {/* Custom dropdown arrow */}
+                  <span style={{
+                    position: 'absolute',
+                    right: '12px',
+                    pointerEvents: 'none',
+                    color: '#38b6ff',
+                    fontSize: '16px',
+                  }}>▼</span>
                 </div>
-              ))}
+                {/* Dropdown custom styles */}
+                <style>
+                  {`
+                    select.custom-dropdown:focus {
+                      border-color: #38b6ff;
+                      box-shadow: 0 0 0 2px #e3f4fd;
+                    }
+                    select.custom-dropdown option {
+                      padding: 8px 12px;
+                      font-size: 15px;
+                      font-family: 'Canva Sans', sans-serif;
+                    }
+                    /* Chrome/Edge/Safari */
+                    select.custom-dropdown::-webkit-scrollbar {
+                      width: 8px;
+                      background: #f5f6f7;
+                    }
+                    select.custom-dropdown::-webkit-scrollbar-thumb {
+                      background: #e3f4fd;
+                      border-radius: 4px;
+                    }
+                  `}
+                </style>
+              </div>
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="mb-6">
+              {/* Week headers */}
+              <div
+                className="grid grid-cols-7 gap-2 mb-2"
+                style={{ minWidth: 0 }}
+              >
+                {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                  <div
+                    key={day}
+                    className="flex items-center justify-center text-sm font-medium text-muted-foreground"
+                    style={{
+                      width: '44px',
+                      height: '32px',
+                      minWidth: '44px',
+                      minHeight: '32px',
+                      background: '#f5f6f7',
+                      borderRadius: '8px'
+                    }}
+                  >
+                    {day}
+                  </div>
+                ))}
+              </div>
+              
+              {/* Calendar days */}
+              <div
+                className="grid grid-cols-7 gap-x-2"
+                style={{
+                  minWidth: 0,
+                  background: '#f8fafc',
+                  borderRadius: '12px',
+                  padding: '8px 0',
+                  rowGap: '12px'
+                }}
+              >
+                {generateCalendar()}
+              </div>
+            </div>
+
+            {/* Journal Section for selected date */}
+            {selectedDate && getJournalForSelectedDate() && (
+              <div>
+                <h3 className="text-lg font-bold text-foreground mb-4">
+                  My Journal on {selectedDate} {selectedMonth} {selectedYear}...
+                </h3>
+                <div className="space-y-3">
+                  {getJournalForSelectedDate().map((entry, index) => (
+                    <div key={index} className="bg-muted rounded-lg p-3 border border-border">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        "{entry}"
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {selectedTab === 'Mood Analysis' && (
+          <div className="p-6 bg-card flex flex-col items-center justify-center min-h-[300px]">
+            <h2 className="text-xl font-bold text-foreground mb-2">Mood Analysis</h2>
+            <p className="text-muted-foreground text-sm mb-4">
+              Mood analytics and trends will appear here.
+            </p>
+            {/* Add mood analysis charts or summaries here */}
+            <div className="w-full h-40 flex items-center justify-center bg-muted rounded-lg border border-border">
+              <span className="text-muted-foreground">[Mood chart placeholder]</span>
             </div>
           </div>
-        </div>
+        )}
+
+        {selectedTab === 'Period Tracker' && (
+          <div className="p-6 bg-card flex flex-col items-center justify-center min-h-[300px]">
+            <h2 className="text-xl font-bold text-foreground mb-2">Period Tracker</h2>
+            <p className="text-muted-foreground text-sm mb-4">
+              Track your cycle and symptoms here.
+            </p>
+            {/* Add period tracking UI here */}
+            <div className="w-full h-40 flex items-center justify-center bg-muted rounded-lg border border-border">
+              <span className="text-muted-foreground">[Period tracker placeholder]</span>
+            </div>
+          </div>
+        )}
         {/* Bottom Navigation */}
       </div>
     </div>
