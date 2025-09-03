@@ -1,12 +1,8 @@
 import { useState } from 'react';
-// import messageIcon from '../assets/images/message-icon.png';
-// import communityIcon from '../assets/images/community-icon.png';
-// import homeIcon from '../assets/images/home-icon.png';
-// import todoIcon from '../assets/images/to-do-list.png';
-// import settingIcon from '../assets/images/setting.png';
-
+import BottomBar from './bottomBar';
 
 export default function Home() {
+  const [selectedTab, setSelectedTab] = useState('Calendar');
   const [selectedDate, setSelectedDate] = useState(null);
   
   // Mock data for mood tracking
@@ -60,29 +56,139 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-md mx-auto bg-card rounded-3xl shadow-xl overflow-hidden border border-border">
-        {/* Header */}
-        <div className="bg-primary p-6 text-primary-foreground">
-          <div className="bg-primary/80 rounded-2xl p-4 mb-4 backdrop-blur-sm">
-            <p className="text-sm">
-              Hey there, take a deep breath — you're doing better than you think! 
-              Ready to check in and lighten your load today?
-            </p>
-          </div>
-          
-          <div className="flex space-x-2 mb-4">
-            <button className="bg-primary-foreground text-primary px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground transition-colors">
-              Calendar
-            </button>
-            <button className="text-primary-foreground/80 px-4 py-2 rounded-full text-sm hover:text-primary-foreground hover:bg-primary/20 transition-colors">
-              Mood Analysis
-            </button>
-            <button className="text-primary-foreground/80 px-4 py-2 rounded-full text-sm hover:text-primary-foreground hover:bg-primary/20 transition-colors">
-              Period Tracker
-            </button>
-          </div>
-        </div>
+    <div 
+      className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-500 p-4 relative"
+      style={{ fontFamily: "'Canva Sans', sans-serif", paddingBottom: '84.6px' }}
+    >
+      {/* Blue rounded rectangle */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '-55px',
+          width: '100%',
+          height: '180px',
+          backgroundColor: '#38b6ff',
+          borderRadius: '40px',
+          transform: 'translateX(-50%)',
+          zIndex: 10,
+        }}
+        ></div>
+      {/* White rounded rectangle for message */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '10px',
+          width: '85%',
+          maxWidth: '361.3px',
+          height: '62px',
+          backgroundColor: '#fff',
+          borderRadius: '24px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 20,
+          padding: '0 16px',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <p
+          className="text-sm text-gray-800 text-center"
+          style={{ lineHeight: '1.3', 
+                  fontFamily: "'Canva Sans', sans-serif",
+                  fontSize: '14px'
+                 }}
+        >
+          Hey there, take a deep breath — you're doing better than you think!<br />
+          Ready to check in and lighten your load today?
+        </p>
+      </div>
+      {/* Editable journal input in white rounded rectangle */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '29.1px',
+          top: '88.4px',
+          width: '168.5px',
+          height: '25.2px',
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 21,
+          padding: '0 8px',
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Add today's journal..."
+          style={{
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            outline: 'none',
+            background: 'transparent',
+            color: '#222', // Text color when typing
+            fontSize: '12px',
+            fontFamily: "'Canva Sans', sans-serif",
+          }}
+          className="placeholder-journal"
+        />
+        <style>
+          {`
+            .placeholder-journal::placeholder {
+              color: #c8c8c8;
+              font-family: 'Canva Sans', sans-serif;
+            }
+          `}
+        </style>
+      </div>
+      {/* Button group below blue rectangle */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '140px', // Adjust as needed to sit below blue rectangle
+          width: '360.4px',
+          height: '46.7px',
+          backgroundColor: '#f5f6f7',
+          borderRadius: '18px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          zIndex: 22,
+          transform: 'translateX(-50%)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}
+      >
+        {['Calendar', 'Mood Analysis', 'Period Tracker'].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setSelectedTab(tab)}
+            style={{
+              border: 'none',
+              background: selectedTab === tab ? '#38b6ff' : 'transparent',
+              color: selectedTab === tab ? '#fff' : '#939598',
+              fontSize: '13px',
+              fontFamily: "'Canva Sans', sans-serif",
+              borderRadius: '14px',
+              padding: '8px 18px',
+              boxShadow: selectedTab === tab ? '0 2px 8px rgba(56,182,255,0.18)' : 'none',
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      {/* Main content */}
+      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden" style={{marginTop: '0px'}}>
 
         {/* Calendar Section */}
         <div className="p-6 bg-card">
@@ -125,7 +231,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+        {/* Bottom Navigation */}
       </div>
+      <BottomBar />
     </div>
   );
 }
