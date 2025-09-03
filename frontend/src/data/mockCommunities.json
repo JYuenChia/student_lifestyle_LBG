@@ -1,0 +1,46 @@
+{
+  "myCommunities": [
+    {
+      "id": 1,
+      "name": "UM FSKTM",
+      "description": "Homework Heroes",
+      "members": "35k members",
+      "image": "👨‍💻",
+      "type": "joined"
+    },
+    {
+      "id": 2,
+      "name": "Chill Corner",
+      "description": "Relaxation zone",
+      "members": "12k members", 
+      "image": "🛋️",
+      "type": "joined"
+    }
+  ],
+  "recommendedCommunities": [
+    {
+      "id": 3,
+      "name": "Everyday Quotes",
+      "description": "Daily motivation",
+      "members": "15+ members",
+      "image": "📝",
+      "type": "recommended"
+    },
+    {
+      "id": 4,
+      "name": "UPM volleyball gang",
+      "description": "Sports enthusiasts",
+      "members": "100+ members",
+      "image": "🏐",
+      "type": "recommended"
+    },
+    {
+      "id": 5,
+      "name": "BTS Army Club",
+      "description": "K-pop fans unite",
+      "members": "1.3k+ members",
+      "image": "🎵",
+      "type": "recommended"
+    }
+  ]
+}

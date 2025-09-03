@@ -9,6 +9,7 @@ import shareIcon from '../../assets/images/share.png';
 import bookmarkIcon from '../../assets/images/bookmark.png';
 import bookmarkClickedIcon from '../../assets/images/bookmark-clicked.png';
 import mockPosts from '../../data/mockPosts.json';
+import mockCommunities from '../../data/mockCommunities.json';
 
 // Dynamic image loading with Vite
 const images = import.meta.glob('../../assets/images/*.{jpg,jpeg,png,gif}', { eager: true });
@@ -18,6 +19,8 @@ export default function Discussion() {
   const [posts, setPosts] = useState(mockPosts.map(post => ({ ...post, isBookmarked: false })));
   const [newComment, setNewComment] = useState('');
   const [activeCommentPost, setActiveCommentPost] = useState(null);
+  const [myCommunities] = useState(mockCommunities.myCommunities);
+  const [recommendedCommunities] = useState(mockCommunities.recommendedCommunities);
   const navigate = useNavigate();
 
   // Helper function to get the correct image source
@@ -115,9 +118,28 @@ export default function Discussion() {
           {post.user.charAt(0)}
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: '600', fontSize: '14px', color: '#333' }}>{post.user}</div>
-          <div style={{ fontSize: '12px', color: '#999' }}>{post.time}</div>
-        </div>
+            <div
+              className="font-sans font-semibold"
+              style={{
+                fontSize: '14px',
+                color: '#333',
+                fontWeight: 600,
+                marginBottom: '2px'
+              }}
+            >
+              {post.user}
+            </div>
+            <div
+              className="font-sans"
+              style={{
+                fontSize: '10px',
+                color: '#888',
+                marginTop: '2px'
+              }}
+            >
+              {post.time}
+            </div>
+          </div>
         <button 
           onClick={() => handleBookmark(post.id)}
           style={{
@@ -143,10 +165,8 @@ export default function Discussion() {
       </div>
 
       {/* Post content */}
-      <div style={{ 
-        fontSize: '14px', 
-        lineHeight: '1.4', 
-        color: '#333', 
+      <div className="font-sans leading-relaxed text-gray-800" style={{ 
+        fontSize: '12px',
         marginBottom: post.image ? '12px' : '16px' 
       }}>
         {post.content}
@@ -215,8 +235,7 @@ export default function Discussion() {
               filter: post.isLiked ? 'invert(32%) sepia(98%) saturate(7492%) hue-rotate(-7deg) brightness(97%) contrast(104%)' : 'none'
             }}
           />
-          <span style={{ 
-            fontSize: '14px', 
+          <span className="font-sans text-sm" style={{ 
             color: post.isLiked ? '#ff4757' : '#666' 
           }}>
             {post.likes}
@@ -245,7 +264,7 @@ export default function Discussion() {
             alt="Comment" 
             style={{ width: '18px', height: '18px' }} 
           />
-          <span style={{ fontSize: '14px', color: '#666' }}>{post.comments}</span>
+          <span className="font-sans text-sm text-gray-600">{post.comments}</span>
         </button>
 
         <button style={{
@@ -268,6 +287,85 @@ export default function Discussion() {
           />
         </button>
       </div>
+    </div>
+  );
+
+  const CommunityCard = ({ community, showJoinButton = false }) => (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      padding: '12px 0',
+      borderBottom: '1px solid #f0f0f0'
+    }}>
+      {/* Community Image/Icon */}
+      <div style={{
+        width: '50px',
+        height: '50px',
+        borderRadius: '12px',
+        backgroundColor: '#f5f6f7',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '24px',
+        marginRight: '12px'
+      }}>
+        {community.image}
+      </div>
+
+      {/* Community Info */}
+      <div style={{ flex: 1 }}>
+        <div className="font-sans font-semibold" style={{
+          fontSize: '16px',
+          color: '#333',
+          marginBottom: '2px'
+        }}>
+          {community.name}
+        </div>
+        <div className="font-sans" style={{
+          fontSize: '12px',
+          color: '#666',
+          marginBottom: '2px'
+        }}>
+          {community.description}
+        </div>
+        <div className="font-sans" style={{
+          fontSize: '11px',
+          color: '#999'
+        }}>
+          {community.members}
+        </div>
+      </div>
+
+      {/* Join Button for Recommended */}
+      {showJoinButton && (
+        <button style={{
+          padding: '6px 16px',
+          backgroundColor: '#38b6ff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '16px',
+          fontSize: '14px',
+          fontWeight: '500',
+          cursor: 'pointer'
+        }}>
+          + Join
+        </button>
+      )}
+
+      {/* View Group for My Communities */}
+      {!showJoinButton && (
+        <button className="font-sans" style={{
+          padding: '6px 12px',
+          backgroundColor: 'transparent',
+          color: '#38b6ff',
+          border: '1px solid #38b6ff',
+          borderRadius: '16px',
+          fontSize: '12px',
+          cursor: 'pointer'
+        }}>
+          View group
+        </button>
+      )}
     </div>
   );
 
@@ -321,12 +419,12 @@ export default function Discussion() {
           <button
             key={tab}
             onClick={() => setSelectedTab(tab)}
+            className="font-sans"
             style={{
               border: 'none',
               background: selectedTab === tab ? '#38b6ff' : 'transparent',
               color: selectedTab === tab ? '#fff' : '#939598',
               fontSize: '13px',
-              fontFamily: "'Canva Sans', sans-serif",
               borderRadius: selectedTab === tab ? '20px' : '14px', 
               padding: selectedTab === tab ? '6px 18px' : '6px 10px', 
               boxShadow: selectedTab === tab ? '0 2px 8px rgba(56,182,255,0.18)' : 'none',
@@ -357,13 +455,92 @@ export default function Discussion() {
             ))}
           </div>
         ) : (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '40px 20px',
-            color: '#666'
+          <div style={{
+            padding: '0',
+            backgroundColor: 'white',
+            minHeight: 'calc(100vh - 140px)'
           }}>
-            <h3>Community Page</h3>
-            <p>Community content coming soon...</p>
+            {/* My Communities Section */}
+            <div style={{ marginBottom: '30px' }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '16px'
+              }}>
+                <h2 className="font-sans font-bold" style={{
+                  fontSize: '18px',
+                  color: '#333',
+                  margin: 0
+                }}>
+                  My Communities
+                </h2>
+                <button style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  backgroundColor: '#f0f0f0',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  color: '#666'
+                }}>
+                  +
+                </button>
+              </div>
+
+              {/* My Communities List */}
+              <div>
+                {myCommunities.map(community => (
+                  <CommunityCard 
+                    key={community.id} 
+                    community={community} 
+                    showJoinButton={false}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Recommended Section */}
+            <div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '16px'
+              }}>
+                <h2 className="font-sans font-bold" style={{
+                  fontSize: '18px',
+                  color: '#333',
+                  margin: 0
+                }}>
+                  Recommended
+                </h2>
+                <button className="font-sans" style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: '#38b6ff',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}>
+                  View all
+                </button>
+              </div>
+
+              {/* Recommended Communities List */}
+              <div>
+                {recommendedCommunities.map(community => (
+                  <CommunityCard 
+                    key={community.id} 
+                    community={community} 
+                    showJoinButton={true}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -409,7 +586,7 @@ export default function Discussion() {
               paddingBottom: '10px',
               borderBottom: '1px solid #eee'
             }}>
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>
+              <h3 className="font-sans text-lg font-semibold" style={{ margin: 0 }}>
                 Comments
               </h3>
               <button 
@@ -461,28 +638,19 @@ export default function Discussion() {
                         }}>
                           {comment.user.charAt(0)}
                         </div>
-                        <div>
-                          <span style={{ 
-                            fontWeight: '600', 
-                            fontSize: '14px', 
-                            color: '#333' 
-                          }}>
-                            {comment.user}
-                          </span>
-                          <span style={{ 
-                            fontSize: '12px', 
-                            color: '#999', 
-                            marginLeft: '8px' 
-                          }}>
-                            {comment.time}
-                          </span>
-                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span className="font-sans font-semibold text-sm text-gray-800">
+                              {comment.user}
+                            </span>
+                            <span
+                              className="font-sans text-[10px] text-gray-500"
+                              style={{ marginLeft: '10px', opacity: 0.8 }}
+                            >
+                              {comment.time}
+                            </span>
+                          </div>
                       </div>
-                      <div style={{ 
-                        fontSize: '14px', 
-                        color: '#555', 
-                        marginLeft: '40px' 
-                      }}>
+                      <div className="font-sans text-sm text-gray-700 ml-10">
                         {comment.text}
                       </div>
                     </div>
@@ -512,6 +680,7 @@ export default function Discussion() {
                 placeholder="Add a comment..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
+                className="font-sans"
                 style={{
                   flex: 1,
                   padding: '12px',
@@ -529,6 +698,7 @@ export default function Discussion() {
               <button
                 onClick={submitComment}
                 disabled={!newComment.trim()}
+                className="font-sans font-medium"
                 style={{
                   padding: '12px 20px',
                   backgroundColor: newComment.trim() ? '#38b6ff' : '#ccc',
@@ -536,8 +706,7 @@ export default function Discussion() {
                   border: 'none',
                   borderRadius: '20px',
                   fontSize: '14px',
-                  cursor: newComment.trim() ? 'pointer' : 'not-allowed',
-                  fontWeight: '500'
+                  cursor: newComment.trim() ? 'pointer' : 'not-allowed'
                 }}
               >
                 Post
