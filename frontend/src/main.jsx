@@ -5,10 +5,10 @@ import '@fontsource/jetbrains-mono';
 import '@fontsource/source-serif-4';
 import './index.css';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import MessagePage from './pages/Message.jsx';
-import CommunityPage from './pages/CommunityPage.jsx';
+import MessagePage from './pages/Chat.jsx';
+import DiscussionPage from './pages/Discussion.jsx';
 import HomePage from './pages/Home.jsx';
-import TodoListPage from './pages/TodoListPage.jsx';
+import TodoListPage from './pages/Todo.jsx';
 import SettingPage from './pages/SettingPage.jsx';
 import BottomBar from './pages/bottomBar';
 
@@ -19,7 +19,7 @@ function MainLayout() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/message" element={<MessagePage />} />
-          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/discussion" element={<DiscussionPage />} />
           <Route path="/todolist" element={<TodoListPage />} />
           <Route path="/setting" element={<SettingPage />} />
         </Routes>
