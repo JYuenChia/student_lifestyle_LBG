@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function BottomBar() {
-  const [selected, setSelected] = useState('home');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const icons = [
     { name: 'chat', src: '/chat.png', alt: 'Chat', to: '/chat' },
@@ -12,6 +11,9 @@ export default function BottomBar() {
     { name: 'goal', src: '/goal.png', alt: 'Goal', to: '/todo' },
     { name: 'settings', src: '/settings.png', alt: 'Settings', to: '/settings' },
   ];
+
+  // Determine selected icon based on current route
+  const selected = icons.find(icon => icon.to === location.pathname)?.name || 'home';
 
   return (
     <div
@@ -32,10 +34,7 @@ export default function BottomBar() {
       {icons.map(icon => (
         <button
           key={icon.name}
-          onClick={() => {
-            setSelected(icon.name);
-            navigate(icon.to);
-          }}
+          onClick={() => navigate(icon.to)}
           style={{
             background: 'none',
             border: 'none',
@@ -50,7 +49,9 @@ export default function BottomBar() {
             style={{
               width: 50,
               height: 50,
-              filter: selected === icon.name ? 'grayscale(0%) brightness(0) sepia(1) hue-rotate(180deg) saturate(0) opacity(1)' : 'grayscale(100%)',
+              filter: selected === icon.name
+                ? 'grayscale(0%) brightness(0) sepia(1) hue-rotate(180deg) saturate(0) opacity(0.4)'
+                : 'none',
               transition: 'filter 0.2s',
             }}
           />

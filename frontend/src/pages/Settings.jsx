@@ -1,8 +1,10 @@
+import BottomBar from './bottomBar';
+
 export default function Settings() {
   return (
     <div>
-      {/* Your settings page content */}
       Settings Page
+      <BottomBar />
     </div>
   );
 }
