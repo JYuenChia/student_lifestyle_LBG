@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import BottomBar from './bottomBar';
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState('Calendar');
@@ -233,7 +232,6 @@ export default function Home() {
         </div>
         {/* Bottom Navigation */}
       </div>
-      <BottomBar />
     </div>
   );
 }

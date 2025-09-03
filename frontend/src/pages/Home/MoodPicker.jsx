@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Journal from "./Journal";
+import Journal from "./Home/Journal";
 
 const moods = [
   { label: "Happy", emoji: "😊" },

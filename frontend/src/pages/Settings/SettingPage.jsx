@@ -1,4 +1,4 @@
-import BottomBar from './bottomBar';
+import BottomBar from '../bottomBar';
 
 export default function SettingPage() {
   return (

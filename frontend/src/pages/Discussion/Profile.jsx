@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import returnIcon from '../assets/images/return-icon.png';
+import returnIcon from '../../assets/images/return-icon.png';
 
 export default function Profile() {
   const navigate = useNavigate();

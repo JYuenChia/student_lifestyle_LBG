@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BottomBar from './bottomBar';
-import searchIcon from '../assets/images/search-icon.png';
-import profileIcon from '../assets/images/profile-icon.png';
+import searchIcon from '../../assets/images/search-icon.png';
+import profileIcon from '../../assets/images/profile-icon.png';
 
 export default function Discussion() {
   const [selectedTab, setSelectedTab] = useState('Discussion');
@@ -84,8 +83,6 @@ export default function Discussion() {
         <h2>Discussion Page</h2>
         <p>Selected tab: {selectedTab}</p>
       </div>
-
-      <BottomBar />
     </div>
   );
 }
