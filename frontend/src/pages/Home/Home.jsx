@@ -1,18 +1,19 @@
 import { useState } from 'react';
+import MoodPicker from './MoodPicker';
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState('Calendar');
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('November');
   const [selectedYear, setSelectedYear] = useState('2025');
-  
-  // Mock data for mood tracking
-  const moodData = {
+  const [showMoodPicker, setShowMoodPicker] = useState(true);
+
+  // --- Add these states for mood and journal ---
+  const [moodData, setMoodData] = useState({
     1: '😊', 2: '😐', 3: '😊', 4: '😊',
     // Add more dates as needed
-  };
-
-  const journalEntries = [
+  });
+  const [journalEntries, setJournalEntries] = useState([
     {
       date: "18 November 2025",
       entries: [
@@ -24,7 +25,8 @@ export default function Home() {
         "Maybe tomorrow will be better if I get some rest."
       ]
     }
-  ];
+  ]);
+  // --- end add ---
 
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -133,11 +135,82 @@ export default function Home() {
     return days;
   };
 
+  // --- Add this handler for saving mood and journal ---
+  function handleSaveJournal({ mood, emoji, journal }) {
+    // Get today's date
+    const today = new Date();
+    const day = today.getDate();
+    const month = months[today.getMonth()];
+    const year = today.getFullYear().toString();
+    const dateStr = `${day} ${month} ${year}`;
+
+    // Save mood (emoji) for today
+    setMoodData(prev => ({
+      ...prev,
+      [day]: emoji || mood
+    }));
+
+    // Save journal entry for today
+    setJournalEntries(prev => {
+      const existing = prev.find(j => j.date === dateStr);
+      if (existing) {
+        return prev.map(j =>
+          j.date === dateStr
+            ? { ...j, entries: [...j.entries, journal] }
+            : j
+        );
+      } else {
+        return [...prev, { date: dateStr, entries: [journal] }];
+      }
+    });
+
+    setShowMoodPicker(false);
+  }
+  // --- end add ---
+
+  if (showMoodPicker) {
+    return (
+      <>
+        {/* Keep the background only for MoodPicker modal */}
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 1000,
+            background: 'rgba(0,0,0,0.18)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <div
+            style={{
+              background: 'white',
+              borderRadius: '24px',
+              boxShadow: '0 8px 32px rgba(56,182,255,0.10)',
+              padding: '0',
+              minWidth: '340px',
+              maxWidth: '95vw',
+              maxHeight: '95vh',
+              overflow: 'auto'
+            }}
+          >
+            <MoodPicker
+              onClose={() => setShowMoodPicker(false)}
+              onSave={handleSaveJournal}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <div 
       className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-500 p-4 relative"
       style={{ fontFamily: "'Canva Sans', sans-serif", paddingBottom: '84.6px' }}
     >
+      {/* Removed <MovingGradientBg /> */}
       {/* Blue rounded rectangle (now in normal flow) */}
       <div
         style={{
