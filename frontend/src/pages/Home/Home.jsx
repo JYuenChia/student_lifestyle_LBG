@@ -6,8 +6,8 @@ import Calendar from "./Calendar";
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState("Calendar");
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedMonth, setSelectedYear] = useState("November");
-  const [selectedYear, setSelectedMonth] = useState("2025");
+  const [selectedMonth, setSelectedMonth] = useState("November");
+  const [selectedYear, setSelectedYear] = useState("2025");
   const [showMoodPicker, setShowMoodPicker] = useState(true);
 
   const [editingTodayJournal, setEditingTodayJournal] = useState(false);
@@ -97,10 +97,12 @@ export default function Home() {
         return [...prev, { date: todayStr, entries: [journal] }];
       }
     });
-    setShowMoodPicker(false); // Ensure MoodPicker is closed
+
+    // Ensure MoodPicker and EditJournalWindow are closed
+    setShowMoodPicker(false);
     setEditingTodayJournal(false);
     setEditJournalValue("");
-    setShowEditJournalWindow(false); // Ensure EditJournalWindow is closed
+    setShowEditJournalWindow(false);
   }
 
   function handleContinueEditJournal() {
