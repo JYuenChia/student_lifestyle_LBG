@@ -14,8 +14,8 @@ export default function BottomBar() {
 
   // Determine selected icon based on current route
   const selected = (() => {
-    if (location.pathname === '/profile') {
-      return 'discussion'; // Highlight Discussion when on Profile page
+    if (location.pathname === '/profile'||location.pathname === '/NewPost') {
+      return 'discussion'; // Highlight Discussion when on Profile page 
     }
     return icons.find(icon => icon.to === location.pathname)?.name || 'home';
   })();

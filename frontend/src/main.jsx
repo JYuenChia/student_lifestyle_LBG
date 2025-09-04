@@ -11,7 +11,9 @@ import HomePage from './pages/Home/Home.jsx';
 import TodoListPage from './pages/ToDoList/ToDo.jsx';
 import SettingPage from './pages/Settings/SettingPage.jsx';
 import Profile from './pages/Discussion/Profile.jsx';
+import NewPost from './pages/Discussion/NewPost.jsx';
 import BottomBar from './pages/bottomBar';
+import { PostsProvider } from './context/PostsContext.jsx';
 
 function MainLayout() {
   return (
@@ -24,6 +26,8 @@ function MainLayout() {
           <Route path="/todo" element={<TodoListPage />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/newpost" element={<NewPost />} />
+          <Route path="/NewPost" element={<NewPost />} />
         </Routes>
       </div>
       <BottomBar />
@@ -34,7 +38,9 @@ function MainLayout() {
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
-      <MainLayout />
+      <PostsProvider>
+        <MainLayout />
+      </PostsProvider>
     </Router>
   </StrictMode>
 );
