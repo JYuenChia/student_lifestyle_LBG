@@ -72,7 +72,16 @@ export default function EditJournalWindow({
               }}
             />
           ) : (
-            <span style={{ fontSize: 32, color: "#fff" }}>{emoji}</span>
+            <img
+              src={`emojis/${emoji}.png`} // Use relative path for Vite preview/prod
+              alt={emoji}
+              style={{
+                width: 48,
+                height: 48,
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
           )}
         </div>
         {/* Edit emoji button */}
@@ -109,13 +118,13 @@ export default function EditJournalWindow({
             color: "#222",
             borderRadius: "14px",
             padding: "14px",
-            marginBottom: 18,
+            marginBottom: "24px", // Increased margin for spacing
             resize: "vertical",
             outline: "none",
           }}
         />
         {/* Done and Cancel buttons */}
-        <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
+        <div style={{ display: "flex", gap: "20px", marginBottom: "24px" }}>
           <button
             onClick={onCancel}
             style={{

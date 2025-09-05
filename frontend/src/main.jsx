@@ -16,26 +16,58 @@ import NewCommunity from './pages/Discussion/NewCommunity.jsx';
 import BottomBar from './pages/bottomBar';
 import { PostsProvider } from './context/PostsContext.jsx';
 
+import React from "react";
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    console.error("ErrorBoundary caught an error:", error); // Log error
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error details:", error, errorInfo); // Log error details
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: "20px", color: "red" }}>
+          <h1>Something went wrong.</h1>
+          <p>{this.state.error?.message}</p>
+          <pre>{this.state.error?.stack}</pre> {/* Show stack trace */}
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function MainLayout() {
   const location = useLocation();
   const hideBottomBar = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
-    <div style={{ minHeight: "100vh", position: "relative", paddingBottom: hideBottomBar ? "0" : "60px" }}>
+    <div style={{ minHeight: "100vh", position: "relative", paddingBottom: hideBottomBar ? "0" : "84.6px" }}>
       <div style={{ padding: '20px' }}>
+        <div style={{color: 'red', fontWeight: 'bold'}}>MainLayout is rendering</div>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/message" element={<MessagePage />} />
+          <Route path="/message" element={<MessagePage />} /> {/* Corrected path */}
           <Route path="/discussion" element={<DiscussionPage />} />
           <Route path="/todo" element={<MainToDo />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/newpost" element={<NewPost />} />
-          <Route path="/NewPost" element={<NewPost />} />
           <Route path="/NewCommunity" element={<NewCommunity />} />
+          <Route path="*" element={<div>Page Not Found</div>} /> {/* Fallback route */}
         </Routes>
       </div>
-      <BottomBar />
+      {!hideBottomBar && <BottomBar />} {/* Ensure BottomBar is conditionally rendered */}
     </div>
   );
 }
@@ -43,10 +75,13 @@ function MainLayout() {
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
-      <PostsProvider>
-        <MainLayout />
-      </PostsProvider>
+      <ErrorBoundary>
+        <PostsProvider>
+          <MainLayout />
+        </PostsProvider>
+      </ErrorBoundary>
     </Router>
   </StrictMode>
 );
+
 

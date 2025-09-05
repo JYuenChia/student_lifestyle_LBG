@@ -112,7 +112,20 @@ export default function Journal({ mood, onBack, customEmoji, onSave, editJournal
               />
             ) : (
               <span style={{ fontSize: 32, color: "#fff" }}>
-                {moodEmojis[mood] || "📝"}
+                {moodEmojis[mood] ? (
+                  <img
+                    src={`emojis/${moodEmojis[mood]}.png`} // Use relative path for Vite preview/prod
+                    alt={mood}
+                    style={{
+                      width: 48,
+                      height: 48,
+                      objectFit: "contain",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  "📝"
+                )}
               </span>
             )}
           </div>
@@ -149,10 +162,11 @@ export default function Journal({ mood, onBack, customEmoji, onSave, editJournal
               background: "#f5f6f7",
               border: "1.5px solid #e0e3e7",
               color: "#222",
+              margin: "16px 0", // Added margin for spacing
             }}
           />
           {/* Save and Back buttons */}
-          <div className="flex w-full justify-between mt-2">
+          <div className="flex w-full justify-between mt-4" style={{ gap: "16px" }}>
             <button
               className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
               onClick={onBack}

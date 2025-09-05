@@ -54,7 +54,19 @@ export default function Calendar({
       Custom: "➕",
     };
     if (typeof mood === "string" && moodEmojis[mood]) {
-      return <span style={{ fontSize: "20px", lineHeight: "1" }}>{moodEmojis[mood]}</span>;
+      return (
+        <img
+          src={`emojis/${mood}.png`} // Use relative path for Vite preview/prod
+          alt={mood}
+          style={{
+            width: 20,
+            height: 20,
+            objectFit: "contain",
+            display: "block",
+            margin: "0 auto",
+          }}
+        />
+      );
     }
     return <span style={{ fontSize: "20px", lineHeight: "1" }}>{mood}</span>;
   }

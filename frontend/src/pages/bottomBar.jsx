@@ -5,20 +5,15 @@ export default function BottomBar() {
   const location = useLocation();
 
   const icons = [
-    { name: 'chat', src: '/chat.png', alt: 'Chat', to: '/chat' },
-    { name: 'discussion', src: '/community.png', alt: 'Discussion', to: '/discussion' },
-    { name: 'home', src: '/home.png', alt: 'Home', to: '/' },
-    { name: 'goal', src: '/goal.png', alt: 'Goal', to: '/todo' },
-    { name: 'settings', src: '/settings.png', alt: 'Settings', to: '/setting' },
+    { name: 'chat', src: 'chat.png', alt: 'Chat', to: '/message' },
+    { name: 'discussion', src: 'community.png', alt: 'Discussion', to: '/discussion' },
+    { name: 'home', src: 'home.png', alt: 'Home', to: '/' },
+    { name: 'goal', src: 'goal.png', alt: 'Goal', to: '/todo' },
+    { name: 'settings', src: 'settings.png', alt: 'Settings', to: '/setting' },
   ];
 
   // Determine selected icon based on current route
-  const selected = (() => {
-    if (location.pathname === '/profile'||location.pathname === '/NewPost'|| location.pathname === '/NewCommunity') {
-      return 'discussion'; // Highlight Discussion when on Profile page 
-    }
-    return icons.find(icon => icon.to === location.pathname)?.name || 'home';
-  })();
+  const selected = icons.find(icon => location.pathname.startsWith(icon.to))?.name || 'home';
 
   return (
     <div

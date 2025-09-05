@@ -233,11 +233,11 @@ export default function MoodPicker({ onClose, onSave, editJournalValue, editingT
               border: "1.5px solid #e0e3e7",
               fontFamily: "'Canva Sans', sans-serif",
               fontSize: 15,
-              marginBottom: 18,
+              marginBottom: "24px", // Increased margin for spacing
               outline: "none",
             }}
           />
-          <div style={{ display: "flex", gap: 12, width: "100%", justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: "20px", width: "100%", justifyContent: "center" }}>
             <button
               onClick={() => setShowCustom(false)}
               style={{

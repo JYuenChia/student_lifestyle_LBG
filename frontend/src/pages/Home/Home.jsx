@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import MoodPicker from "./MoodPicker";
 import EditJournalWindow from "./EditJournal";
 import Calendar from "./Calendar";
+import MoodAnalysis from "./MoodAnalysis"; // Ensure this path is correct
 
 export default function Home() {
+  // console.log("Home component rendered"); // Debug log
   const [selectedTab, setSelectedTab] = useState("Calendar");
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState("November");
   const [selectedYear, setSelectedYear] = useState("2025");
-  const [showMoodPicker, setShowMoodPicker] = useState(true);
+  const [showMoodPicker, setShowMoodPicker] = useState(false); // Default to false
 
   const [editingTodayJournal, setEditingTodayJournal] = useState(false);
   const [editJournalValue, setEditJournalValue] = useState("");
@@ -52,11 +54,20 @@ export default function Home() {
   const years = ["2023", "2024", "2025", "2026", "2027"];
 
   useEffect(() => {
+    // console.log("useEffect triggered"); // Debug log
     const today = new Date();
     setSelectedMonth(months[today.getMonth()]);
     setSelectedYear(today.getFullYear().toString());
     setSelectedDate(today.getDate());
-  }, []);
+
+    // Check if mood has already been saved for today
+    const todayStr = getTodayDateStr();
+    if (!moodData[todayStr]) {
+      setShowMoodPicker(true); // Show MoodPicker only if no mood is saved
+    } else {
+      setShowMoodPicker(false); // Ensure MoodPicker does not pop out again
+    }
+  }, []); // Run only on initial render
 
   // Helpers
   function getTodayDateStr() {
@@ -98,8 +109,8 @@ export default function Home() {
       }
     });
 
-    // Ensure MoodPicker and EditJournalWindow are closed
-    setShowMoodPicker(false);
+    // Ensure MoodPicker and EditJournalWindow are closed and do not reopen
+    setShowMoodPicker(false); // Ensure MoodPicker does not pop out again
     setEditingTodayJournal(false);
     setEditJournalValue("");
     setShowEditJournalWindow(false);
@@ -142,7 +153,10 @@ export default function Home() {
     setEditingTodayJournal(true);
   }
 
-  const shouldShowMoodPicker = showMoodPicker && !moodData[getTodayDateStr()] && !journalEntries.find((j) => j.date === getTodayDateStr());
+  const shouldShowMoodPicker =
+    showMoodPicker &&
+    !moodData[getTodayDateStr()] &&
+    !journalEntries.find((j) => j.date === getTodayDateStr());
 
   function handleTabChange(tab) {
     setSelectedTab(tab);
@@ -212,10 +226,12 @@ export default function Home() {
           borderRadius: "24px",
           margin: "0 auto",
           marginTop: "-140px",
+          marginBottom: "18px", // Reduced margin below the white rectangle
           position: "relative",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          padding: "12px",
         }}
       >
         <p className="text-sm text-gray-800 text-center">
@@ -231,7 +247,7 @@ export default function Home() {
           height: "32px",
           backgroundColor: "#fff",
           borderRadius: "12px",
-          margin: "16px auto 0 auto",
+          margin: "16px auto", // Removed top margin to bring it closer to the white rectangle
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -306,10 +322,7 @@ export default function Home() {
         )}
 
         {selectedTab === "Mood Analysis" && (
-          <div className="p-6">
-            <h2 className="text-xl font-bold text-foreground mb-2">Mood Analysis</h2>
-            <p className="text-muted-foreground">Mood analysis content goes here.</p>
-          </div>
+          <MoodAnalysis moodData={moodData} /> 
         )}
 
         {selectedTab === "Period Tracker" && (
