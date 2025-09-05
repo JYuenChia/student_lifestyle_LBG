@@ -64,7 +64,7 @@ function MainLayout() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/newpost" element={<NewPost />} />
           <Route path="/NewCommunity" element={<NewCommunity />} />
-          <Route path="*" element={<div>Page Not Found</div>} /> {/* Fallback route */}
+          <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </div>
       {!hideBottomBar && <BottomBar />} {/* Ensure BottomBar is conditionally rendered */}

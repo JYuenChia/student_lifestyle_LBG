@@ -1,13 +1,13 @@
 // MoodAnalysis.jsx
 import React, { useMemo } from "react";
 import {
+  ResponsiveContainer,
   LineChart,
-  Line,
+  CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
+  Line,
 } from "recharts";
 
 export default function MoodAnalysis({ moodData }) {
@@ -91,9 +91,9 @@ export default function MoodAnalysis({ moodData }) {
         </div>
       </div>
 
-      {/* Chart */}
-      <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-        <h3 className="font-semibold mb-3">Mood Trend</h3>
+      {/* Mood Trend Chart */}
+      <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+        <h4 className="font-semibold mb-2">Mood Trend</h4>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />

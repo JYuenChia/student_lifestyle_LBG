@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import MoodPicker from "./MoodPicker";
 import EditJournalWindow from "./EditJournal";
 import Calendar from "./Calendar";
-import MoodAnalysis from "./MoodAnalysis"; // Ensure this path is correct
+import MoodAnalysis from "./MoodAnalysis";
+import PeriodTracker from "./PeriodTracker"; // Add this import
 
 export default function Home() {
   // console.log("Home component rendered"); // Debug log
@@ -326,10 +327,10 @@ export default function Home() {
         )}
 
         {selectedTab === "Period Tracker" && (
-          <div className="p-6">
-            <h2 className="text-xl font-bold text-foreground mb-2">Period Tracker</h2>
-            <p className="text-muted-foreground">Period tracker content goes here.</p>
-          </div>
+          <PeriodTracker
+            moodData={moodData}
+            // Optionally pass cycleLength and lastPeriodDate as props if needed
+          />
         )}
       </div>
     </div>

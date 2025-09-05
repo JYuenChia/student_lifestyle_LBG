@@ -1,5 +1,23 @@
 import React from "react";
 
+const moodEmojis = {
+  Happy: "😊",
+  Loving: "❤️",
+  Stress: "😖",
+  Mad: "😡",
+  Sad: "😢",
+  Bored: "😐",
+  Fear: "😨",
+  Custom: "➕",
+};
+
+function getMoodLabelFromEmoji(emoji) {
+  for (const [label, char] of Object.entries(moodEmojis)) {
+    if (char === emoji) return label;
+  }
+  return emoji;
+}
+
 export default function EditJournalWindow({
   emoji,
   journal,
@@ -73,7 +91,7 @@ export default function EditJournalWindow({
             />
           ) : (
             <img
-              src={`emojis/${emoji}.png`} // Use relative path for Vite preview/prod
+              src={`emojis/${getMoodLabelFromEmoji(emoji)}.png`} // Use mood label as filename
               alt={emoji}
               style={{
                 width: 48,
