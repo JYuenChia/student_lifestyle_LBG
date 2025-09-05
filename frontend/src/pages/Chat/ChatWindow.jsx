@@ -6,28 +6,12 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
   const [showOptions, setShowOptions] = useState(false);
   const [showRecommended, setShowRecommended] = useState(false);
 
-  // Fixed array of 20 positive messages
   const positiveMessages = [
-    "You're amazing!",
-    "Keep it up!",
-    "Great job!",
-    "Stay positive!",
-    "Believe in yourself!",
-    "You got this!",
-    "Well done!",
-    "Awesome effort!",
-    "Keep smiling!",
-    "You're doing great!",
-    "Fantastic work!",
-    "Proud of you!",
-    "Excellent!",
-    "Keep shining!",
-    "Superb!",
-    "Way to go!",
-    "Keep progressing!",
-    "Amazing effort!",
-    "You rock!",
-    "Stay motivated!",
+    "You got this!", "Keep going!", "Stay positive!", "Great job!", 
+    "Believe in yourself!", "Stay strong!", "You're so amazing!", "Keep smiling!",
+    "Never give up!", "Fantastic work!", "Way to go!", "You rock!", 
+    "Excellent!", "Well done!", "Proud of you!", "Stay focused!",
+    "Keep learning!", "You're unstoppable!", "Awesome effort!", "Shine bright!"
   ];
 
   const handleSend = () => {
@@ -37,7 +21,7 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
       sender: "me",
       text: input,
       time: "Now",
-      read: false, // new messages start as unread
+      read: false,
     };
     sendMessage(newMessage);
     setInput("");
@@ -47,23 +31,10 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
 
   const handleOptionClick = (option) => {
     if (option === "recommended message") {
-      setShowRecommended(!showRecommended);
+      setShowRecommended(true);
     } else {
       alert(`Send ${option}`);
-      setShowOptions(false);
     }
-  };
-
-  const handleRecommendedClick = (msg) => {
-    const newMessage = {
-      id: chat.messages.length + 1,
-      sender: "me",
-      text: msg,
-      time: "Now",
-      read: false,
-    };
-    sendMessage(newMessage);
-    setShowRecommended(false);
     setShowOptions(false);
   };
 
@@ -78,6 +49,7 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
 
   return (
     <div style={{ position: "relative" }}>
+      {/* Header */}
       <button
         onClick={goBack}
         style={{
@@ -93,7 +65,7 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
       </button>
       <h2 style={{ marginBottom: "15px" }}>{chat.name}</h2>
 
-      {/* Messages area */}
+      {/* Messages */}
       <div
         style={{
           height: "300px",
@@ -135,9 +107,7 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
               }}
             >
               {m.time}{" "}
-              {m.sender === "me" && (
-                <span style={{ marginLeft: "5px" }}>{m.read ? "✓✓" : "✓"}</span>
-              )}
+              {m.sender === "me" && <span style={{ marginLeft: "5px" }}>{m.read ? "✓✓" : "✓"}</span>}
             </div>
           </div>
         ))}
@@ -145,6 +115,7 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
 
       {/* Input area */}
       <div style={{ display: "flex", gap: "5px", position: "relative" }}>
+        {/* Text input */}
         <input
           type="text"
           value={input}
@@ -158,6 +129,20 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
             outline: "none",
           }}
         />
+        {/* Emoji picker placeholder */}
+        <button
+          style={{
+            padding: "0 12px",
+            borderRadius: "50%",
+            border: "none",
+            background: "transparent",
+            color: "#000",
+            cursor: "pointer",
+            fontSize: "18px",
+          }}
+        >
+          😃
+        </button>
         {/* Clip button */}
         <button
           onClick={() => setShowOptions(!showOptions)}
@@ -166,7 +151,7 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
             borderRadius: "50%",
             border: "none",
             background: "transparent",
-            color: "royalblue",
+            color: "#000",
             cursor: "pointer",
             fontSize: "16px",
           }}
@@ -188,13 +173,13 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
           Send
         </button>
 
-        {/* Clip options menu */}
+        {/* Clip options */}
         {showOptions && (
           <div
             style={{
               position: "absolute",
               bottom: "50px",
-              right: "0",
+              right: "50px",
               background: "white",
               border: "1px solid #ccc",
               borderRadius: "10px",
@@ -204,67 +189,77 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
             }}
           >
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <button onClick={() => handleOptionClick("location")} style={optionBtnStyle}>
-                📍 Location
-              </button>
-              <button onClick={() => handleOptionClick("poll")} style={optionBtnStyle}>
-                📊 Poll
-              </button>
-              <button onClick={() => handleOptionClick("document")} style={optionBtnStyle}>
-                📄 Document
-              </button>
-              <button onClick={() => handleOptionClick("picture")} style={optionBtnStyle}>
-                🖼️ Picture
-              </button>
-              <button
-                onClick={() => handleOptionClick("recommended message")}
-                style={optionBtnStyle}
-              >
-                💡 Recommended Message
-              </button>
+              <button onClick={() => handleOptionClick("location")} style={optionBtnStyle}>📍 Location</button>
+              <button onClick={() => handleOptionClick("poll")} style={optionBtnStyle}>📊 Poll</button>
+              <button onClick={() => handleOptionClick("document")} style={optionBtnStyle}>📄 Document</button>
+              <button onClick={() => handleOptionClick("picture")} style={optionBtnStyle}>🖼️ Picture</button>
+              <button onClick={() => handleOptionClick("recommended message")} style={optionBtnStyle}>💡 Recommended Message</button>
             </div>
           </div>
         )}
+      </div>
 
-        {/* Recommended messages panel */}
-        {showRecommended && (
-          <div
+      {/* Recommended message panel */}
+      {showRecommended && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "60px",
+            left: "0",
+            right: "0",
+            padding: "10px",
+            background: "linear-gradient(to bottom, #add8e6, white)",
+            borderRadius: "10px",
+            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+            display: "flex",
+            overflowX: "auto",
+            gap: "10px",
+            alignItems: "center",
+          }}
+        >
+          {/* Close button */}
+          <button
+            onClick={() => setShowRecommended(false)}
             style={{
-              position: "absolute",
-              bottom: "60px",
-              left: "10px",
-              right: "10px",
-              height: "50px",
-              background: "linear-gradient(to right, #add8e6, #e0f7ff)",
-              borderRadius: "25px",
-              padding: "5px 15px",
-              display: "flex",
-              overflowX: "auto",
-              alignItems: "center",
-              gap: "10px",
-              boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-              zIndex: 10,
+              marginRight: "10px",
+              border: "none",
+              background: "transparent",
+              fontSize: "18px",
+              cursor: "pointer",
             }}
           >
-            {positiveMessages.map((msg, idx) => (
-              <div
-                key={idx}
-                onClick={() => handleRecommendedClick(msg)}
-                style={{
-                  padding: "5px 10px",
-                  borderRadius: "15px",
-                  background: "#f0f0f0",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  fontSize: "14px",
-                }}
-              >
-                {msg}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            ×
+          </button>
+          {positiveMessages.map((msg, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                sendMessage({
+                  id: chat.messages.length + 1,
+                  sender: "me",
+                  text: msg,
+                  time: "Now",
+                  read: false,
+                });
+                setShowRecommended(false);
+              }}
+              style={{
+                flex: "0 0 auto",
+                padding: "10px 15px",
+                borderRadius: "20px",
+                border: "none",
+                background: "white",
+                cursor: "pointer",
+                fontSize: "16px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {msg}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
+
