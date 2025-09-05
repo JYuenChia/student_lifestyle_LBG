@@ -1,83 +1,69 @@
-// MoodAnalysis.jsx
-import React, { useMemo } from "react";
-import {
-  ResponsiveContainer,
-  LineChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Line,
-} from "recharts";
+import React from "react";
+import { emojiToScale, scaleToEmoji } from "./moodScale";
 
 export default function MoodAnalysis({ moodData }) {
-  // Convert mood emojis to numerical scores for analysis
-  const moodScores = {
-    "😊": 5,
-    "❤️": 5,
-    "😐": 3,
-    "😖": 2,
-    "😡": 1,
-    "😢": 1,
-    "😨": 2,
-  };
-
-  const emojiLabels = {
-    5: "Positive",
-    3: "Neutral",
-    2: "Stressed/Fear",
-    1: "Negative",
-  };
-
-  // Prepare chart data
-  const chartData = useMemo(() => {
-    return Object.entries(moodData).map(([date, emoji]) => ({
-      date,
-      moodScore: moodScores[emoji] || 3, // Default Neutral
-      emoji,
-    }));
-  }, [moodData]);
-
-  // Calculate streaks
-  const { longestPositiveStreak, currentStreak } = useMemo(() => {
-    let longest = 0;
-    let current = 0;
-
-    Object.values(moodData).forEach((emoji) => {
-      if (moodScores[emoji] >= 4) {
-        current++;
-        if (current > longest) longest = current;
-      } else {
-        current = 0;
-      }
-    });
-
-    return { longestPositiveStreak: longest, currentStreak: current };
-  }, [moodData]);
-
-  // Get today’s mood
-  const todayStr = new Date().toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+  // Convert object to array [{date, mood, emoji}]
+  const convertedData = Object.entries(moodData).map(([date, value]) => {
+    if (typeof value === "object" && value !== null && "scale" in value) {
+      // Custom mood with scale and emoji (could be a data URL)
+      return { date, mood: value.scale, emoji: value.emoji };
+    }
+    // Normal emoji
+    return { date, mood: emojiToScale[value] || 3, emoji: value };
   });
-  const todaysMood = moodData[todayStr];
+
+  if (convertedData.length === 0) {
+    return <p className="text-gray-500">No mood data available.</p>;
+  }
+
+  // --- Chart setup ---
+  const width = 300;
+  const height = 150;
+  const padding = 20;
+
+  const maxMood = 5;
+  const minMood = 1;
+
+  const xStep =
+    convertedData.length > 1
+      ? (width - 2 * padding) / (convertedData.length - 1)
+      : 0;
+
+  const yScale = (mood) =>
+    height -
+    padding -
+    ((mood - minMood) / (maxMood - minMood)) * (height - 2 * padding);
+
+  const pathD = convertedData
+    .map((d, i) => {
+      const x = padding + i * xStep;
+      const y = yScale(d.mood);
+      return `${i === 0 ? "M" : "L"}${x},${y}`;
+    })
+    .join(" ");
+
+  // --- Streak calculations ---
+  let longestPositiveStreak = 0;
+  let currentStreak = 0;
+  let tempStreak = 0;
+
+  convertedData.forEach((d, i) => {
+    if (d.mood >= 3) {
+      tempStreak++;
+      if (tempStreak > longestPositiveStreak) {
+        longestPositiveStreak = tempStreak;
+      }
+      if (i === convertedData.length - 1) {
+        currentStreak = tempStreak;
+      }
+    } else {
+      tempStreak = 0;
+    }
+  });
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold text-foreground mb-4">Mood Analysis</h2>
-
-      {/* Mood Summary */}
-      <div className="mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
-        <h3 className="text-lg font-semibold mb-2">Today's Mood</h3>
-        {todaysMood ? (
-          <p className="text-2xl">
-            {todaysMood} {emojiLabels[moodScores[todaysMood] || 3]}
-          </p>
-        ) : (
-          <p className="text-muted-foreground">No mood entry for today yet.</p>
-        )}
-      </div>
+    <div className="p-6 bg-white rounded-2xl shadow-sm">
+      <h2 className="text-xl font-bold mb-4">Mood Analysis</h2>
 
       {/* Streaks */}
       <div className="mb-6 grid grid-cols-2 gap-4">
@@ -91,40 +77,41 @@ export default function MoodAnalysis({ moodData }) {
         </div>
       </div>
 
-      {/* Mood Trend Chart */}
+      {/* Mood Trend */}
       <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
         <h4 className="font-semibold mb-2">Mood Trend</h4>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-            <YAxis domain={[0, 5]} tickFormatter={(v) => emojiLabels[v] || v} />
-            <Tooltip
-              formatter={(value) => {
-                const label = emojiLabels[value] || "Unknown";
-                return [`${label} (${value})`, "Mood"];
-              }}
-              labelFormatter={(label) => `Date: ${label}`}
-            />
-            <Line
-              type="monotone"
-              dataKey="moodScore"
-              stroke="#38b6ff"
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+        <svg width={width} height={height} className="bg-white rounded-lg border">
+          {/* Y axis emoji labels */}
+          {[5, 4, 3, 2, 1].map((val) => {
+            // Show emoji if available, else fallback to scale number
+            const emoji = scaleToEmoji[val];
+            return (
+              <text key={val} x={2} y={yScale(val) + 4} fontSize="12">
+                {emoji || val}
+              </text>
+            );
+          })}
 
-      {/* Insights placeholder */}
-      <div className="mt-6 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-        <h4 className="font-semibold text-yellow-700">Insights</h4>
-        <p className="text-sm text-yellow-800 mt-1">
-          Your moods are trending upward this week. Keep it up by taking breaks
-          and celebrating small wins! 🎉
-        </p>
+          {/* Line */}
+          <path d={pathD} fill="none" stroke="#3b82f6" strokeWidth="2" />
+
+          {/* Dots */}
+          {convertedData.map((d, i) => {
+            const x = padding + i * xStep;
+            const y = yScale(d.mood);
+            return (
+              <g key={i}>
+                <circle cx={x} cy={y} r="3" fill="#3b82f6" />
+                {/* If emoji is a data URL, don't render it as text */}
+                {typeof d.emoji === "string" && d.emoji.startsWith("data:") ? null : (
+                  <text x={x} y={y - 10} fontSize="14" textAnchor="middle">
+                    {d.emoji}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+        </svg>
       </div>
     </div>
   );

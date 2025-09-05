@@ -88,9 +88,15 @@ export default function Home() {
   }
 
   // Handlers (same as before, not removing)
-  function handleSaveJournal({ mood, emoji, journal }) {
+  function handleSaveJournal({ mood, emoji, scale, journal }) {
     const todayStr = getTodayDateStr();
-    setMoodData((prev) => ({ ...prev, [todayStr]: emoji || mood }));
+    setMoodData((prev) => {
+      // If custom scale is provided, store as object {emoji, scale}
+      if (scale !== undefined) {
+        return { ...prev, [todayStr]: { emoji: emoji || mood, scale } };
+      }
+      return { ...prev, [todayStr]: emoji || mood };
+    });
     setJournalEntries((prev) => {
       const existing = prev.find((j) => j.date === todayStr);
       if (existing) {
@@ -119,7 +125,9 @@ export default function Home() {
 
   function handleContinueEditJournal() {
     const todayStr = getTodayDateStr();
-    const emoji = moodData[todayStr];
+    const emojiValue = moodData[todayStr];
+    // If emojiValue is an object (custom), use emojiValue.emoji, else use emojiValue
+    const emoji = typeof emojiValue === "object" && emojiValue !== null ? emojiValue.emoji : emojiValue;
     setEditJournalEmoji(emoji);
     setEditJournalValue(getTodaysJournalEntry());
     setShowEditJournalWindow(true);
