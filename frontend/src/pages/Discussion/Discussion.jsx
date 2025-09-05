@@ -581,19 +581,22 @@ export default function Discussion() {
                 }}>
                   My Communities
                 </h2>
-                <button style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: '#f0f0f0',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  color: '#666'
-                }}>
+                <button 
+                  onClick={() => navigate('/NewCommunity')}
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    backgroundColor: '#f0f0f0',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    color: '#666'
+                  }}
+                >
                   +
                 </button>
               </div>

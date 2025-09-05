@@ -12,6 +12,7 @@ import TodoListPage from './pages/ToDoList/ToDo.jsx';
 import SettingPage from './pages/Settings/SettingPage.jsx';
 import Profile from './pages/Discussion/Profile.jsx';
 import NewPost from './pages/Discussion/NewPost.jsx';
+import NewCommunity from './pages/Discussion/NewCommunity.jsx';
 import BottomBar from './pages/bottomBar';
 import { PostsProvider } from './context/PostsContext.jsx';
 import { Toaster } from "@/components/ui/sonner";
@@ -29,6 +30,7 @@ function MainLayout() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/newpost" element={<NewPost />} />
           <Route path="/NewPost" element={<NewPost />} />
+          <Route path="/NewCommunity" element={<NewCommunity />} />
         </Routes>
       </div>
       <BottomBar />
