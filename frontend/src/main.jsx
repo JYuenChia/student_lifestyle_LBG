@@ -5,7 +5,7 @@ import '@fontsource/jetbrains-mono';
 import '@fontsource/source-serif-4';
 import './index.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MessagePage from './pages/Chat/Chat.jsx';
+import ChatPage from './pages/Chat/Chat.jsx';
 import DiscussionPage from './pages/Discussion/Discussion.jsx';
 import HomePage from './pages/Home/Home.jsx';
 import TodoListPage from './pages/ToDoList/ToDo.jsx';
@@ -22,7 +22,7 @@ function MainLayout() {
       <div style={{ padding: '20px' }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/message" element={<MessagePage />} />
+          <Route path="/chat" element={<ChatPage />} />
           <Route path="/discussion" element={<DiscussionPage />} />
           <Route path="/todo" element={<TodoListPage />} />
           <Route path="/setting" element={<SettingPage />} />
