@@ -41,7 +41,87 @@ export default function TaskCard({ task, onEdit, onDelete, onToggleDone }) {
             : ''}
         </div>
       </div>
-      {/* ...rest of your code... */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 4,
+            marginLeft: 8,
+            marginTop: 2
+          }}
+        >
+          <FaEllipsisV color="#939598" size={18} />
+        </button>
+        {task.repeat && task.repeat !== 'None' && (
+          <svg
+            style={{
+              marginTop: 8,
+              color: '#939598',
+              fontSize: 18,
+              width: 18,
+              height: 18,
+              display: 'block'
+            }}
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            title="Repeating Task"
+          >
+            <path d="M2.5 7.5V5a2.5 2.5 0 0 1 2.5-2.5h10M17.5 12.5V15a2.5 2.5 0 0 1-2.5 2.5h-10" />
+            <polyline points="17.5 7.5 17.5 2.5 12.5 2.5" />
+            <polyline points="2.5 12.5 2.5 17.5 7.5 17.5" />
+          </svg>
+        )}
+        {menuOpen && (
+          <div style={{
+            position: 'absolute',
+            top: 28,
+            right: 0,
+            background: '#fff',
+            border: '1px solid #eee',
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            zIndex: 10,
+            minWidth: 100,
+            padding: 8
+          }}>
+            <button
+              onClick={onEdit}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#222',
+                padding: '6px 12px',
+                width: '100%',
+                textAlign: 'left',
+                cursor: 'pointer'
+              }}
+            >
+              Edit
+            </button>
+            <button
+              onClick={onDelete}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#ff5e7f',
+                padding: '6px 12px',
+                width: '100%',
+                textAlign: 'left',
+                cursor: 'pointer'
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
