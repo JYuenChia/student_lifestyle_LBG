@@ -4,7 +4,7 @@
       "id": 1,
       "name": "UM FSKTM",
       "description": "Homework Heroes",
-      "members": "35k members",
+      "members": "1k members",
       "image": "👨‍💻",
       "type": "joined"
     },
@@ -15,11 +15,20 @@
       "members": "12k members", 
       "image": "🛋️",
       "type": "joined"
+    },
+    {
+      "id": 3,
+      "name": "UPU Discussion Room",
+      "description": "Study buddies",
+      "members": "5k members", 
+      "image": "📚",
+      "type": "joined"
     }
+
   ],
   "recommendedCommunities": [
     {
-      "id": 3,
+      "id": 4,
       "name": "Everyday Quotes",
       "description": "Daily motivation",
       "members": "15+ members",
@@ -27,7 +36,7 @@
       "type": "recommended"
     },
     {
-      "id": 4,
+      "id": 5,
       "name": "UPM volleyball gang",
       "description": "Sports enthusiasts",
       "members": "100+ members",
@@ -35,7 +44,7 @@
       "type": "recommended"
     },
     {
-      "id": 5,
+      "id": 6,
       "name": "BTS Army Club",
       "description": "K-pop fans unite",
       "members": "1.3k+ members",

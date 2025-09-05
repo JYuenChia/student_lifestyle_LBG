@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "sonner";
 import searchIcon from '../../assets/images/search-icon.png';
 import profileIcon from '../../assets/images/profile-icon.png';
 import heartIcon from '../../assets/images/heart.png';
@@ -10,6 +11,13 @@ import bookmarkIcon from '../../assets/images/bookmark.png';
 import bookmarkClickedIcon from '../../assets/images/bookmark-clicked.png';
 import mockPosts from '../../data/mockPosts.json';
 import mockCommunities from '../../data/mockCommunities.json';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 // Dynamic image loading with Vite
 const images = import.meta.glob('../../assets/images/*.{jpg,jpeg,png,gif}', { eager: true });
@@ -19,8 +27,10 @@ export default function Discussion() {
   const [posts, setPosts] = useState(mockPosts.map(post => ({ ...post, isBookmarked: false })));
   const [newComment, setNewComment] = useState('');
   const [activeCommentPost, setActiveCommentPost] = useState(null);
-  const [myCommunities] = useState(mockCommunities.myCommunities);
-  const [recommendedCommunities] = useState(mockCommunities.recommendedCommunities);
+  const [myCommunities, setMyCommunities] = useState(mockCommunities.myCommunities);
+  const [recommendedCommunities, setRecommendedCommunities] = useState(mockCommunities.recommendedCommunities);
+  const [joinedCommunities, setJoinedCommunities] = useState(new Set());
+  const [fadingCommunities, setFadingCommunities] = useState(new Set());
   const navigate = useNavigate();
 
   // Helper function to get the correct image source
@@ -89,6 +99,30 @@ export default function Discussion() {
     if (newComment.trim() && activeCommentPost) {
       handleAddComment(activeCommentPost, newComment);
     }
+  };
+
+  const handleJoinCommunity = (community) => {
+    // Add to fading communities first
+    setFadingCommunities(prev => new Set([...prev, community.id]));
+    
+    // Show toast notification
+    toast("You've successfully joined the community! You can now check it in the chat box.");
+    
+    // After fade animation, remove from recommended communities
+    setTimeout(() => {
+      setRecommendedCommunities(prev => prev.filter(c => c.id !== community.id));
+      setFadingCommunities(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(community.id);
+        return newSet;
+      });
+      setJoinedCommunities(prev => new Set([...prev, community.id]));
+      // Add to My Communities if not already present
+      setMyCommunities(prev => {
+        if (prev.some(c => c.id === community.id)) return prev;
+        return [...prev, community];
+      });
+    }, 500); // Match the fade animation duration
   };
 
   const PostCard = ({ post }) => (
@@ -295,7 +329,10 @@ export default function Discussion() {
       display: 'flex',
       alignItems: 'center',
       padding: '12px 0',
-      borderBottom: '1px solid #f0f0f0'
+      borderBottom: '1px solid #f0f0f0',
+      opacity: fadingCommunities.has(community.id) ? 0 : 1,
+      transition: 'opacity 0.5s ease-out',
+      transform: fadingCommunities.has(community.id) ? 'translateY(-10px)' : 'translateY(0)',
     }}>
       {/* Community Image/Icon */}
       <div style={{
@@ -338,16 +375,19 @@ export default function Discussion() {
 
       {/* Join Button for Recommended */}
       {showJoinButton && (
-        <button style={{
-          padding: '6px 16px',
-          backgroundColor: '#38b6ff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '16px',
-          fontSize: '14px',
-          fontWeight: '500',
-          cursor: 'pointer'
-        }}>
+        <button 
+          onClick={() => handleJoinCommunity(community)}
+          style={{
+            padding: '6px 16px',
+            backgroundColor: '#38b6ff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '16px',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer'
+          }}
+        >
           + Join
         </button>
       )}
@@ -366,6 +406,72 @@ export default function Discussion() {
           View group
         </button>
       )}
+    </div>
+  );
+
+  const CommunityCarouselCard = ({ community }) => (
+    <div style={{
+      backgroundColor: 'white',
+      borderRadius: '16px',
+      padding: '20px',
+      border: '1px solid #f0f0f0',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+      height: '160px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      position: 'relative'
+    }}>
+      {/* Community Icon */}
+      <div style={{
+        width: '60px',
+        height: '60px',
+        borderRadius: '16px',
+        backgroundColor: '#f5f6f7',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '32px',
+        marginBottom: '12px'
+      }}>
+        {community.image}
+      </div>
+
+      {/* Community Info */}
+      <div style={{ flex: 1 }}>
+        <div className="font-sans font-bold" style={{
+          fontSize: '16px',
+          color: '#333',
+          marginBottom: '4px',
+          lineHeight: '1.2'
+        }}>
+          {community.name}
+        </div>
+        <div className="font-sans" style={{
+          fontSize: '12px',
+          color: '#666',
+          marginBottom: '12px'
+        }}>
+          {community.members}
+        </div>
+      </div>
+
+      {/* View Group Button */}
+      <button className="font-sans" style={{
+        position: 'absolute',
+        bottom: '16px',
+        right: '16px',
+        padding: '6px 12px',
+        backgroundColor: 'transparent',
+        color: '#38b6ff',
+        border: '1px solid #38b6ff',
+        borderRadius: '12px',
+        fontSize: '11px',
+        cursor: 'pointer',
+        fontWeight: '500'
+      }}>
+        View group
+      </button>
     </div>
   );
 
@@ -492,15 +598,69 @@ export default function Discussion() {
                 </button>
               </div>
 
-              {/* My Communities List */}
-              <div>
-                {myCommunities.map(community => (
-                  <CommunityCard 
-                    key={community.id} 
-                    community={community} 
-                    showJoinButton={false}
-                  />
-                ))}
+              {/* My Communities Carousel */}
+              <div style={{ 
+                position: 'relative',
+                overflow: 'hidden',
+                width: '100%'
+              }}>
+                {/* Scrollable Container */}
+                <div 
+                  style={{
+                    display: 'flex',
+                    gap: '12px',
+                    overflowX: 'auto',
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: '#38b6ff #f0f0f0',
+                    paddingBottom: '16px',
+                    scrollBehavior: 'smooth',
+                  }}
+                  className="communities-scroll"
+                >
+                  {myCommunities.map((community) => (
+                    <div 
+                      key={community.id} 
+                      style={{ 
+                        minWidth: '220px',
+                        flex: '0 0 220px'
+                      }}
+                    >
+                      <CommunityCarouselCard community={community} />
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Fade effect for overflow */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '30px',
+                  height: 'calc(100% - 16px)',
+                  background: 'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+                  pointerEvents: 'none',
+                  zIndex: 1
+                }} />
+
+                {/* Custom Scrollbar Styles */}
+                <style>
+                  {`
+                    .communities-scroll::-webkit-scrollbar {
+                      height: 6px;
+                    }
+                    .communities-scroll::-webkit-scrollbar-track {
+                      background: #f0f0f0;
+                      border-radius: 3px;
+                    }
+                    .communities-scroll::-webkit-scrollbar-thumb {
+                      background: #38b6ff;
+                      border-radius: 3px;
+                    }
+                    .communities-scroll::-webkit-scrollbar-thumb:hover {
+                      background: #2196f3;
+                    }
+                  `}
+                </style>
               </div>
             </div>
 

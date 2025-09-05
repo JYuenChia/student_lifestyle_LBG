@@ -14,6 +14,7 @@ import Profile from './pages/Discussion/Profile.jsx';
 import NewPost from './pages/Discussion/NewPost.jsx';
 import BottomBar from './pages/bottomBar';
 import { PostsProvider } from './context/PostsContext.jsx';
+import { Toaster } from "@/components/ui/sonner";
 
 function MainLayout() {
   return (
@@ -31,6 +32,7 @@ function MainLayout() {
         </Routes>
       </div>
       <BottomBar />
+      <Toaster />
     </div>
   );
 }

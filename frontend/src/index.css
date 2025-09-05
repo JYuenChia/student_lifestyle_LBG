@@ -243,3 +243,11 @@
     font-family: 'Inter', sans-serif;
   }
 }
+
+.sonner-toast-sm {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  max-width: 100%;
+  min-width: unset;
+  margin-top: 0;
+}
