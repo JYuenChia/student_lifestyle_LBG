@@ -12,7 +12,7 @@ const moods = [
   { label: "Custom", emoji: "➕" },
 ];
 
-export default function MoodPicker({ onClose, onSave }) {
+export default function MoodPicker({ onClose, onSave, editJournalValue, editingTodayJournal }) {
   const [selectedMood, setSelectedMood] = useState(null);
   const [showJournal, setShowJournal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -94,6 +94,7 @@ export default function MoodPicker({ onClose, onSave }) {
             setCustomLabel("");
             setCustomDataUrl(null);
           }}
+          editJournalValue={editJournalValue}
         />
       </>
     );
@@ -236,25 +237,44 @@ export default function MoodPicker({ onClose, onSave }) {
               outline: "none",
             }}
           />
-          <button
-            onClick={handleDoneCustom}
-            disabled={!customLabel.trim()}
-            style={{
-              background: "#38b6ff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "12px",
-              padding: "10px 32px",
-              fontWeight: 700,
-              fontFamily: "'Canva Sans', sans-serif",
-              fontSize: 16,
-              cursor: customLabel.trim() ? "pointer" : "not-allowed",
-              opacity: customLabel.trim() ? 1 : 0.5,
-              marginTop: 6,
-            }}
-          >
-            Done
-          </button>
+          <div style={{ display: "flex", gap: 12, width: "100%", justifyContent: "center" }}>
+            <button
+              onClick={() => setShowCustom(false)}
+              style={{
+                background: "#fff",
+                color: "#38b6ff",
+                border: "1.5px solid #38b6ff",
+                borderRadius: "12px",
+                padding: "10px 32px",
+                fontWeight: 700,
+                fontFamily: "'Canva Sans', sans-serif",
+                fontSize: 16,
+                cursor: "pointer",
+                marginTop: 6,
+              }}
+            >
+              Back
+            </button>
+            <button
+              onClick={handleDoneCustom}
+              disabled={!customLabel.trim()}
+              style={{
+                background: "#38b6ff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "12px",
+                padding: "10px 32px",
+                fontWeight: 700,
+                fontFamily: "'Canva Sans', sans-serif",
+                fontSize: 16,
+                cursor: customLabel.trim() ? "pointer" : "not-allowed",
+                opacity: customLabel.trim() ? 1 : 0.5,
+                marginTop: 6,
+              }}
+            >
+              Done
+            </button>
+          </div>
         </div>
       </div>
     );

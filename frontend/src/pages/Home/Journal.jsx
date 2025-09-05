@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Mood emoji mapping for display
 const moodEmojis = {
@@ -12,8 +12,14 @@ const moodEmojis = {
   Custom: "➕",
 };
 
-export default function Journal({ mood, onBack, customEmoji, onSave }) {
-  const [entry, setEntry] = useState("");
+export default function Journal({ mood, onBack, customEmoji, onSave, editJournalValue }) {
+  const [entry, setEntry] = useState(editJournalValue || "");
+
+  useEffect(() => {
+    if (editJournalValue !== undefined) {
+      setEntry(editJournalValue);
+    }
+  }, [editJournalValue]);
 
   return (
     <div
