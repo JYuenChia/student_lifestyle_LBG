@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MessagePage from './pages/Chat/Chat.jsx';
 import DiscussionPage from './pages/Discussion/Discussion.jsx';
 import HomePage from './pages/Home/Home.jsx';
-import TodoListPage from './pages/ToDoList/ToDo.jsx';
+import MainToDo from './pages/ToDoList/MainToDo.jsx';
 import SettingPage from './pages/Settings/SettingPage.jsx';
 import Profile from './pages/Discussion/Profile.jsx';
 import NewPost from './pages/Discussion/NewPost.jsx';
@@ -25,7 +25,7 @@ function MainLayout() {
           <Route path="/" element={<HomePage />} />
           <Route path="/message" element={<MessagePage />} />
           <Route path="/discussion" element={<DiscussionPage />} />
-          <Route path="/todo" element={<TodoListPage />} />
+          <Route path="/todo" element={<MainToDo />} />
           <Route path="/setting" element={<SettingPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/newpost" element={<NewPost />} />
