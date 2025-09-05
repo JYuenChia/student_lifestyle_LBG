@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaMoon, FaFont, FaEye, FaShieldAlt, FaBell, FaPhone, FaChevronRight, FaPen, FaCheck } from 'react-icons/fa';
 import BottomBar from '../bottomBar';
 
@@ -22,6 +23,8 @@ export default function SettingPage() {
   const [dataPrivacy, setDataPrivacy] = useState(false);
   const [reminders, setReminders] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleProfilePicChange = e => {
     if (e.target.files && e.target.files[0]) {
       setProfilePic(URL.createObjectURL(e.target.files[0]));
@@ -38,11 +41,11 @@ export default function SettingPage() {
       padding: 0,
       boxSizing: 'border-box'
     }}>
-          <div style={{
-      maxWidth: 400,
-      margin: '0 auto',
-      padding: '32px 0'
-    }}> </div>
+      <div style={{
+        maxWidth: 400,
+        margin: '0 auto',
+        padding: '32px 0'
+      }}> </div>
       {/* Title */}
       <div style={{ fontSize: 24, fontWeight: 700, color: '#222', marginTop: 32, marginLeft: 24, marginBottom: 16 }}>
         Settings
@@ -238,7 +241,7 @@ export default function SettingPage() {
             fontWeight: 600,
             cursor: 'pointer'
           }}
-          onClick={() => {/* handle logout */}}
+          onClick={() => { navigate('/login'); }}
         >
           Logout
         </button>

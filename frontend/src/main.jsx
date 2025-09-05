@@ -4,7 +4,7 @@ import '@fontsource/inter';
 import '@fontsource/jetbrains-mono';
 import '@fontsource/source-serif-4';
 import './index.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import MessagePage from './pages/Chat/Chat.jsx';
 import DiscussionPage from './pages/Discussion/Discussion.jsx';
 import HomePage from './pages/Home/Home.jsx';
@@ -14,13 +14,21 @@ import Profile from './pages/Discussion/Profile.jsx';
 import NewPost from './pages/Discussion/NewPost.jsx';
 import BottomBar from './pages/bottomBar';
 import { PostsProvider } from './context/PostsContext.jsx';
+import Login from './pages/Registration/Login.jsx';
+import SignUp from './pages/Registration/SignUp.jsx';
 
 function MainLayout() {
+  const location = useLocation();
+  const hideBottomBar = location.pathname === '/login' || location.pathname === '/signup';
+
   return (
-    <div style={{ minHeight: "100vh", position: "relative", paddingBottom: "60px" }}>
+    <div style={{ minHeight: "100vh", position: "relative", paddingBottom: hideBottomBar ? "0" : "60px" }}>
       <div style={{ padding: '20px' }}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/message" element={<MessagePage />} />
           <Route path="/discussion" element={<DiscussionPage />} />
           <Route path="/todo" element={<MainToDo />} />
@@ -30,7 +38,7 @@ function MainLayout() {
           <Route path="/NewPost" element={<NewPost />} />
         </Routes>
       </div>
-      <BottomBar />
+      {!hideBottomBar && <BottomBar />}
     </div>
   );
 }
