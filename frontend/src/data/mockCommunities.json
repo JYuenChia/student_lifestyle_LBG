@@ -5,7 +5,7 @@
       "name": "UM FSKTM",
       "description": "Homework Heroes",
       "members": "1k members",
-      "image": "👨‍💻",
+      "image": "�",
       "type": "joined"
     },
     {
@@ -13,7 +13,7 @@
       "name": "Chill Corner",
       "description": "Relaxation zone",
       "members": "12k members", 
-      "image": "🛋️",
+      "image": "�",
       "type": "joined"
     },
     {
@@ -21,7 +21,7 @@
       "name": "UPU Discussion Room",
       "description": "Study buddies",
       "members": "5k members", 
-      "image": "📚",
+      "image": "�",
       "type": "joined"
     }
 
@@ -32,7 +32,7 @@
       "name": "Everyday Quotes",
       "description": "Daily motivation",
       "members": "15+ members",
-      "image": "📝",
+      "image": "�",
       "type": "recommended"
     },
     {
@@ -40,7 +40,7 @@
       "name": "UPM volleyball gang",
       "description": "Sports enthusiasts",
       "members": "100+ members",
-      "image": "🏐",
+      "image": "📷",
       "type": "recommended"
     },
     {
@@ -48,7 +48,7 @@
       "name": "BTS Army Club",
       "description": "K-pop fans unite",
       "members": "1.3k+ members",
-      "image": "🎵",
+      "image": "📷",
       "type": "recommended"
     }
   ]

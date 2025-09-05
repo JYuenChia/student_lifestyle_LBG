@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "sonner";
+import { Toggle } from "@/components/ui/toggle";
 import {
   Select,
   SelectContent,
@@ -8,6 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+// Import category icons
+import booksIcon from '../../assets/images/books.png';
+import wellnessIcon from '../../assets/images/wellness.png';
+import sportsIcon from '../../assets/images/sports.png';
+import financeIcon from '../../assets/images/finance.png';
+import socialIcon from '../../assets/images/social.png';
+import entertainmentIcon from '../../assets/images/entertainment.png';
+import campusLifeIcon from '../../assets/images/campus-life.png';
+import othersIcon from '../../assets/images/others.png';
 
 export default function NewCommunity() {
   const navigate = useNavigate();
@@ -18,14 +29,14 @@ export default function NewCommunity() {
   const [privacy, setPrivacy] = useState('Public');
 
   const categories = [
-    { id: 'study', name: 'Study', icon: '📚' },
-    { id: 'wellness', name: 'Wellness', icon: '🧘' },
-    { id: 'sports', name: 'Sports', icon: '⚽' },
-    { id: 'finance', name: 'Finance', icon: '💰' },
-    { id: 'social', name: 'Social', icon: '🏠' },
-    { id: 'entertainment', name: 'Entertainment', icon: '🎮' },
-    { id: 'campus', name: 'Campus Life', icon: '🏫' },
-    { id: 'others', name: 'Others', icon: '•••' }
+    { id: 'study', name: 'Study', icon: booksIcon },
+    { id: 'wellness', name: 'Health', icon: wellnessIcon },
+    { id: 'sports', name: 'Sports', icon: sportsIcon },
+    { id: 'finance', name: 'Finance', icon: financeIcon },
+    { id: 'social', name: 'Social', icon: socialIcon },
+    { id: 'entertainment', name: 'Fun', icon: entertainmentIcon },
+    { id: 'campus', name: 'College', icon: campusLifeIcon },
+    { id: 'others', name: 'Others', icon: othersIcon }
   ];
 
   const handleCancel = () => {
@@ -34,8 +45,22 @@ export default function NewCommunity() {
 
   const handleCreate = () => {
     if (communityName.trim() && description.trim() && selectedCategories.length > 0) {
-      // Here you would typically save the community to your backend
+      // Create the community object
+      const newCommunity = {
+        name: communityName.trim(),
+        description: description.trim(),
+        categories: selectedCategories,
+        privacy: privacy,
+        photo: selectedPhoto
+      };
+      
+      // Store the new community data in localStorage temporarily
+      localStorage.setItem('newCommunity', JSON.stringify(newCommunity));
+      localStorage.setItem('navigateToCommunitiesTab', 'true');
+      
       toast("Community created successfully! Welcome to your new community.");
+      
+      // Navigate back to previous page
       navigate(-1);
     } else {
       toast("Please fill in all required fields and select at least one category.");
@@ -50,10 +75,11 @@ export default function NewCommunity() {
     );
   };
 
-  const handlePhotoSelect = () => {
-    // In a real app, this would open a file picker
-    setSelectedPhoto('selected');
-    toast("Photo selection would be implemented here");
+  const handlePhotoSelect = (files) => {
+    if (files && files.length > 0) {
+      setSelectedPhoto(files[0]);
+      toast(`Photo "${files[0].name}" selected successfully!`);
+    }
   };
 
   return (
@@ -110,7 +136,7 @@ export default function NewCommunity() {
               padding: '12px 16px',
               border: '1px solid #e0e0e0',
               borderRadius: '12px',
-              fontSize: '16px',
+              fontSize: '14px',
               fontFamily: 'Inter, system-ui, sans-serif',
               outline: 'none',
               backgroundColor: '#f8f9fa',
@@ -140,7 +166,7 @@ export default function NewCommunity() {
               padding: '12px 16px',
               border: '1px solid #e0e0e0',
               borderRadius: '12px',
-              fontSize: '16px',
+              fontSize: '14px',
               fontFamily: 'Inter, system-ui, sans-serif',
               resize: 'none',
               outline: 'none',
@@ -161,8 +187,15 @@ export default function NewCommunity() {
           }}>
             Photo
           </label>
-          <button
-            onClick={handlePhotoSelect}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handlePhotoSelect(e.target.files)}
+            style={{ display: 'none' }}
+            id="photo-upload"
+          />
+          <label
+            htmlFor="photo-upload"
             style={{
               width: '100%',
               padding: '12px 16px',
@@ -172,16 +205,15 @@ export default function NewCommunity() {
               fontFamily: 'Inter, system-ui, sans-serif',
               backgroundColor: '#f8f9fa',
               color: selectedPhoto ? '#333' : '#999',
-              textAlign: 'left',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '8px',
+              boxSizing: 'border-box'
             }}
           >
-            <span style={{ fontSize: '16px' }}>📷</span>
-            {selectedPhoto ? 'Photo selected' : 'Select Your Photo'}
-          </button>
+            {selectedPhoto ? `Selected: ${selectedPhoto.name}` : 'Select Your Photo'}
+          </label>
         </div>
 
         {/* Categories Field */}
@@ -197,42 +229,65 @@ export default function NewCommunity() {
           </label>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '12px'
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '5px'
           }}>
             {categories.map((category) => (
-              <button
+              <Toggle
                 key={category.id}
-                onClick={() => toggleCategory(category.id)}
+                pressed={selectedCategories.includes(category.id)}
+                onPressedChange={() => toggleCategory(category.id)}
+                aria-label={`Toggle ${category.name}`}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   padding: '12px 8px',
-                  border: selectedCategories.includes(category.id) 
-                    ? '2px solid #5DADE2' 
-                    : '1px solid #e0e0e0',
-                  borderRadius: '12px',
-                  backgroundColor: selectedCategories.includes(category.id) 
-                    ? '#f0f9ff' 
-                    : '#f8f9fa',
+                  border: 'none',
+                  borderRadius: '0',
+                  backgroundColor: 'transparent',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
-                  minHeight: '70px',
+                  minHeight: '80px',
                   fontSize: '12px',
-                  fontFamily: 'Inter, system-ui, sans-serif'
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                  width: '100%',
+                  height: 'auto'
                 }}
               >
-                <span style={{ fontSize: '24px', marginBottom: '4px' }}>
-                  {category.icon}
-                </span>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  backgroundColor: selectedCategories.includes(category.id) ? '#5DADE2' : '#e5e7eb',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '8px',
+                  transition: 'all 0.2s ease'
+                }}>
+                  <img 
+                    src={category.icon} 
+                    alt={category.name}
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      objectFit: 'contain',
+                      filter: selectedCategories.includes(category.id) ? 'brightness(0) invert(1)' : 'none'
+                    }}
+                  />
+                </div>
                 <span style={{ 
-                  color: selectedCategories.includes(category.id) ? '#5DADE2' : '#666',
-                  fontWeight: selectedCategories.includes(category.id) ? '600' : '400'
+                  color: selectedCategories.includes(category.id) ? '#5DADE2' : '#374151',
+                  fontWeight: selectedCategories.includes(category.id) ? '600' : '500',
+                  textAlign: 'center',
+                  lineHeight: '1.2',
+                  fontSize: '12px'
                 }}>
                   {category.name}
                 </span>
-              </button>
+              </Toggle>
             ))}
           </div>
         </div>

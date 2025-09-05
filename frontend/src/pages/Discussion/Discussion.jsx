@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from "sonner";
 import searchIcon from '../../assets/images/search-icon.png';
 import profileIcon from '../../assets/images/profile-icon.png';
@@ -36,6 +36,44 @@ export default function Discussion() {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [filteredCommunities, setFilteredCommunities] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for new community data when component mounts or location changes
+  useEffect(() => {
+    // Check localStorage for new community data
+    const checkForNewCommunity = () => {
+      const newCommunityData = localStorage.getItem('newCommunity');
+      const shouldNavigateToCommunitiesTab = localStorage.getItem('navigateToCommunitiesTab');
+      
+      if (newCommunityData) {
+        try {
+          const communityData = JSON.parse(newCommunityData);
+          addNewCommunity(communityData);
+          localStorage.removeItem('newCommunity'); // Clean up
+        } catch (error) {
+          console.error('Error parsing new community data:', error);
+        }
+      }
+      
+      if (shouldNavigateToCommunitiesTab === 'true') {
+        setSelectedTab('Communities');
+        localStorage.removeItem('navigateToCommunitiesTab'); // Clean up
+      }
+    };
+
+    checkForNewCommunity();
+
+    // Also check when the window regains focus (when navigating back)
+    const handleFocus = () => {
+      checkForNewCommunity();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
 
   // Helper function to get the correct image source
   const getImageSrc = (imagePath) => {
@@ -127,6 +165,23 @@ export default function Discussion() {
         return [...prev, community];
       });
     }, 500); // Match the fade animation duration
+  };
+
+  const addNewCommunity = (newCommunity) => {
+    // Generate a unique ID for the new community
+    const communityWithId = {
+      ...newCommunity,
+      id: Date.now(), // Simple ID generation
+      members: "1 member", // Creator is the first member
+      type: "joined",
+      image: "📷" // Photo placeholder
+    };
+    
+    // Add to My Communities
+    setMyCommunities(prev => [communityWithId, ...prev]);
+    
+    // Switch to Communities tab to show the new community
+    setSelectedTab('Communities');
   };
 
   const handleSearch = () => {
