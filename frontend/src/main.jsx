@@ -4,7 +4,7 @@ import '@fontsource/inter';
 import '@fontsource/jetbrains-mono';
 import '@fontsource/source-serif-4';
 import './index.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import MessagePage from './pages/Chat/Chat.jsx';
 import DiscussionPage from './pages/Discussion/Discussion.jsx';
 import HomePage from './pages/Home/Home.jsx';
