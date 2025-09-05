@@ -251,3 +251,32 @@
   min-width: unset;
   margin-top: 0;
 }
+
+.custom-select-content {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 8px 0;
+  border: 1px solid #e0e0e0;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.custom-select-item svg {
+  display: none !important;
+}
+
+.custom-select-item {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-family: Inter, system-ui, sans-serif;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.custom-select-item[data-state="checked"],
+.custom-select-item:active,
+.custom-select-item:focus {
+  background: #eaf6ff;
+  color: #3498db;
+}

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from "sonner";
 import searchIcon from '../../assets/images/search-icon.png';
 import profileIcon from '../../assets/images/profile-icon.png';
@@ -31,7 +31,49 @@ export default function Discussion() {
   const [recommendedCommunities, setRecommendedCommunities] = useState(mockCommunities.recommendedCommunities);
   const [joinedCommunities, setJoinedCommunities] = useState(new Set());
   const [fadingCommunities, setFadingCommunities] = useState(new Set());
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchInput, setShowSearchInput] = useState(false);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [filteredCommunities, setFilteredCommunities] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for new community data when component mounts or location changes
+  useEffect(() => {
+    // Check localStorage for new community data
+    const checkForNewCommunity = () => {
+      const newCommunityData = localStorage.getItem('newCommunity');
+      const shouldNavigateToCommunitiesTab = localStorage.getItem('navigateToCommunitiesTab');
+      
+      if (newCommunityData) {
+        try {
+          const communityData = JSON.parse(newCommunityData);
+          addNewCommunity(communityData);
+          localStorage.removeItem('newCommunity'); // Clean up
+        } catch (error) {
+          console.error('Error parsing new community data:', error);
+        }
+      }
+      
+      if (shouldNavigateToCommunitiesTab === 'true') {
+        setSelectedTab('Communities');
+        localStorage.removeItem('navigateToCommunitiesTab'); // Clean up
+      }
+    };
+
+    checkForNewCommunity();
+
+    // Also check when the window regains focus (when navigating back)
+    const handleFocus = () => {
+      checkForNewCommunity();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
 
   // Helper function to get the correct image source
   const getImageSrc = (imagePath) => {
@@ -123,6 +165,69 @@ export default function Discussion() {
         return [...prev, community];
       });
     }, 500); // Match the fade animation duration
+  };
+
+  const addNewCommunity = (newCommunity) => {
+    // Generate a unique ID for the new community
+    const communityWithId = {
+      ...newCommunity,
+      id: Date.now(), // Simple ID generation
+      members: "1 member", // Creator is the first member
+      type: "joined",
+      image: "📷" // Photo placeholder
+    };
+    
+    // Add to My Communities
+    setMyCommunities(prev => [communityWithId, ...prev]);
+    
+    // Switch to Communities tab to show the new community
+    setSelectedTab('Communities');
+  };
+
+  const handleSearch = () => {
+    setShowSearchInput(true);
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    
+    if (query.trim() === '') {
+      setFilteredPosts([]);
+      setFilteredCommunities([]);
+      return;
+    }
+
+    const lowercaseQuery = query.toLowerCase();
+
+    if (selectedTab === 'Discussion') {
+      // Search in posts
+      const filtered = posts.filter(post => 
+        post.content.toLowerCase().includes(lowercaseQuery) ||
+        post.user.toLowerCase().includes(lowercaseQuery)
+      );
+      setFilteredPosts(filtered);
+    } else {
+      // Search in communities (both my communities and recommended)
+      const allCommunities = [...myCommunities, ...recommendedCommunities];
+      const filtered = allCommunities.filter(community =>
+        community.name.toLowerCase().includes(lowercaseQuery) ||
+        (community.description && community.description.toLowerCase().includes(lowercaseQuery))
+      );
+      setFilteredCommunities(filtered);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setShowSearchInput(false);
+    setFilteredPosts([]);
+    setFilteredCommunities([]);
+  };
+
+  // Clear search when switching tabs
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    clearSearch();
   };
 
   const PostCard = ({ post }) => (
@@ -479,13 +584,16 @@ export default function Discussion() {
     <div style={{ position: 'relative', minHeight: '100vh', paddingBottom: '60px' }}>
       {/* Top right icon buttons */}
       <div style={{ position: 'absolute', top: '12px', right: '1px', display: 'flex', gap: '1px', zIndex: 30 }}>
-        <button style={{ 
-          background: 'transparent', 
-          border: 'none', 
-          cursor: 'pointer',
-          outline: 'none',
-          WebkitTapHighlightColor: 'transparent'
-        }}>
+        <button 
+          onClick={handleSearch}
+          style={{ 
+            background: 'transparent', 
+            border: 'none', 
+            cursor: 'pointer',
+            outline: 'none',
+            WebkitTapHighlightColor: 'transparent'
+          }}
+        >
           <img src={searchIcon} alt="Search" style={{ width: '24px', height: '24px' }} />
         </button>
         <button 
@@ -502,13 +610,64 @@ export default function Discussion() {
         </button>
       </div>
 
+      {/* Search Input */}
+      {showSearchInput && (
+        <div style={{
+          width: '310px',
+          position: 'absolute',
+          top: '45px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 40,
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
+          border: '1px solid #e0e0e0'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '8px 16px'
+          }}>
+            <input
+              type="text"
+              placeholder={`Search ${selectedTab === 'Discussion' ? 'discussions' : 'communities'}...`}
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              autoFocus
+              style={{
+                flex: 1,
+                border: 'none',
+                outline: 'none',
+                fontSize: '14px',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                backgroundColor: 'transparent'
+              }}
+            />
+            <button
+              onClick={clearSearch}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '23px',
+                color: '#666',
+                padding: '4px'
+              }}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Button group in subheader area */}
       <div
         style={{
           position: 'relative',
           left: '50%',
           top: '55px',
-          width: '340px',
+          width: '300px',
           height: '35px',
           backgroundColor: '#f5f6f7',
           borderRadius: '10px',
@@ -524,7 +683,7 @@ export default function Discussion() {
         {['Discussion', 'Community'].map(tab => (
           <button
             key={tab}
-            onClick={() => setSelectedTab(tab)}
+            onClick={() => handleTabChange(tab)}
             className="font-sans"
             style={{
               border: 'none',
@@ -556,9 +715,54 @@ export default function Discussion() {
       }}>
         {selectedTab === 'Discussion' ? (
           <div>
-            {posts.map(post => (
-              <PostCard key={post.id} post={post} />
-            ))}
+            {/* Show search results or all posts */}
+            {searchQuery.trim() !== '' ? (
+              <div>
+                {/* Search Results Header */}
+                <div style={{
+                  padding: '16px 0',
+                  borderBottom: '1px solid #f0f0f0',
+                  marginBottom: '20px'
+                }}>
+                  <h3 className="font-sans font-bold" style={{
+                    fontSize: '18px',
+                    color: '#333',
+                    margin: 0
+                  }}>
+                    Search Results for "{searchQuery}"
+                  </h3>
+                  <p className="font-sans" style={{
+                    fontSize: '14px',
+                    color: '#666',
+                    margin: '4px 0 0 0'
+                  }}>
+                    {filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''} found
+                  </p>
+                </div>
+                
+                {/* Search Results */}
+                {filteredPosts.length > 0 ? (
+                  filteredPosts.map(post => (
+                    <PostCard key={post.id} post={post} />
+                  ))
+                ) : (
+                  <div style={{
+                    textAlign: 'center',
+                    padding: '40px 20px',
+                    color: '#666'
+                  }}>
+                    <p className="font-sans">No discussions found matching "{searchQuery}"</p>
+                    <p className="font-sans" style={{ fontSize: '14px', marginTop: '8px' }}>
+                      Try searching with different keywords
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              posts.map(post => (
+                <PostCard key={post.id} post={post} />
+              ))
+            )}
           </div>
         ) : (
           <div style={{
@@ -566,141 +770,200 @@ export default function Discussion() {
             backgroundColor: 'white',
             minHeight: 'calc(100vh - 140px)'
           }}>
-            {/* My Communities Section */}
-            <div style={{ marginBottom: '30px' }}>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '16px'
-              }}>
-                <h2 className="font-sans font-bold" style={{
-                  fontSize: '18px',
-                  color: '#333',
-                  margin: 0
+            {/* Show search results or normal community sections */}
+            {searchQuery.trim() !== '' ? (
+              <div>
+                {/* Search Results Header */}
+                <div style={{
+                  padding: '16px 0',
+                  borderBottom: '1px solid #f0f0f0',
+                  marginBottom: '20px'
                 }}>
-                  My Communities
-                </h2>
-                <button style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: '#f0f0f0',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  color: '#666'
-                }}>
-                  +
-                </button>
-              </div>
-
-              {/* My Communities Carousel */}
-              <div style={{ 
-                position: 'relative',
-                overflow: 'hidden',
-                width: '100%'
-              }}>
-                {/* Scrollable Container */}
-                <div 
-                  style={{
-                    display: 'flex',
-                    gap: '12px',
-                    overflowX: 'auto',
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: '#38b6ff #f0f0f0',
-                    paddingBottom: '16px',
-                    scrollBehavior: 'smooth',
-                  }}
-                  className="communities-scroll"
-                >
-                  {myCommunities.map((community) => (
-                    <div 
-                      key={community.id} 
-                      style={{ 
-                        minWidth: '220px',
-                        flex: '0 0 220px'
-                      }}
-                    >
-                      <CommunityCarouselCard community={community} />
-                    </div>
-                  ))}
+                  <h3 className="font-sans font-bold" style={{
+                    fontSize: '18px',
+                    color: '#333',
+                    margin: 0
+                  }}>
+                    Search Results for "{searchQuery}"
+                  </h3>
+                  <p className="font-sans" style={{
+                    fontSize: '14px',
+                    color: '#666',
+                    margin: '4px 0 0 0'
+                  }}>
+                    {filteredCommunities.length} communit{filteredCommunities.length !== 1 ? 'ies' : 'y'} found
+                  </p>
                 </div>
                 
-                {/* Fade effect for overflow */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '30px',
-                  height: 'calc(100% - 16px)',
-                  background: 'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
-                  pointerEvents: 'none',
-                  zIndex: 1
-                }} />
-
-                {/* Custom Scrollbar Styles */}
-                <style>
-                  {`
-                    .communities-scroll::-webkit-scrollbar {
-                      height: 6px;
-                    }
-                    .communities-scroll::-webkit-scrollbar-track {
-                      background: #f0f0f0;
-                      border-radius: 3px;
-                    }
-                    .communities-scroll::-webkit-scrollbar-thumb {
-                      background: #38b6ff;
-                      border-radius: 3px;
-                    }
-                    .communities-scroll::-webkit-scrollbar-thumb:hover {
-                      background: #2196f3;
-                    }
-                  `}
-                </style>
+                {/* Search Results */}
+                {filteredCommunities.length > 0 ? (
+                  <div>
+                    {filteredCommunities.map(community => {
+                      const isMyCommunity = myCommunities.some(c => c.id === community.id);
+                      return (
+                        <CommunityCard 
+                          key={community.id} 
+                          community={community} 
+                          showJoinButton={!isMyCommunity && recommendedCommunities.some(c => c.id === community.id)}
+                        />
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div style={{
+                    textAlign: 'center',
+                    padding: '40px 20px',
+                    color: '#666'
+                  }}>
+                    <p className="font-sans">No communities found matching "{searchQuery}"</p>
+                    <p className="font-sans" style={{ fontSize: '14px', marginTop: '8px' }}>
+                      Try searching with different keywords
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
+            ) : (
+              <>
+                {/* My Communities Section */}
+                <div style={{ marginBottom: '30px' }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '16px'
+                  }}>
+                    <h2 className="font-sans font-bold" style={{
+                      fontSize: '18px',
+                      color: '#333',
+                      margin: 0
+                    }}>
+                      My Communities
+                    </h2>
+                    <button 
+                      onClick={() => navigate('/NewCommunity')}
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        backgroundColor: '#f0f0f0',
+                        border: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        color: '#666'
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
 
-            {/* Recommended Section */}
-            <div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '16px'
-              }}>
-                <h2 className="font-sans font-bold" style={{
-                  fontSize: '18px',
-                  color: '#333',
-                  margin: 0
-                }}>
-                  Recommended
-                </h2>
-                <button className="font-sans" style={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: '#38b6ff',
-                  fontSize: '14px',
-                  cursor: 'pointer'
-                }}>
-                  View all
-                </button>
-              </div>
+                  {/* My Communities Carousel */}
+                  <div style={{ 
+                    position: 'relative',
+                    overflow: 'hidden',
+                    width: '100%'
+                  }}>
+                    {/* Scrollable Container */}
+                    <div 
+                      style={{
+                        display: 'flex',
+                        gap: '12px',
+                        overflowX: 'auto',
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: '#38b6ff #f0f0f0',
+                        paddingBottom: '16px',
+                        scrollBehavior: 'smooth',
+                      }}
+                      className="communities-scroll"
+                    >
+                      {myCommunities.map((community) => (
+                        <div 
+                          key={community.id} 
+                          style={{ 
+                            minWidth: '220px',
+                            flex: '0 0 220px'
+                          }}
+                        >
+                          <CommunityCarouselCard community={community} />
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Fade effect for overflow */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      width: '30px',
+                      height: 'calc(100% - 16px)',
+                      background: 'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+                      pointerEvents: 'none',
+                      zIndex: 1
+                    }} />
 
-              {/* Recommended Communities List */}
-              <div>
-                {recommendedCommunities.map(community => (
-                  <CommunityCard 
-                    key={community.id} 
-                    community={community} 
-                    showJoinButton={true}
-                  />
-                ))}
-              </div>
-            </div>
+                    {/* Custom Scrollbar Styles */}
+                    <style>
+                      {`
+                        .communities-scroll::-webkit-scrollbar {
+                          height: 6px;
+                        }
+                        .communities-scroll::-webkit-scrollbar-track {
+                          background: #f0f0f0;
+                          border-radius: 3px;
+                        }
+                        .communities-scroll::-webkit-scrollbar-thumb {
+                          background: #38b6ff;
+                          border-radius: 3px;
+                        }
+                        .communities-scroll::-webkit-scrollbar-thumb:hover {
+                          background: #2196f3;
+                        }
+                      `}
+                    </style>
+                  </div>
+                </div>
+
+                {/* Recommended Section */}
+                <div>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '16px'
+                  }}>
+                    <h2 className="font-sans font-bold" style={{
+                      fontSize: '18px',
+                      color: '#333',
+                      margin: 0
+                    }}>
+                      Recommended
+                    </h2>
+                    <button className="font-sans" style={{
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      color: '#38b6ff',
+                      fontSize: '14px',
+                      cursor: 'pointer'
+                    }}>
+                      View all
+                    </button>
+                  </div>
+
+                  {/* Recommended Communities List */}
+                  <div>
+                    {recommendedCommunities.map(community => (
+                      <CommunityCard 
+                        key={community.id} 
+                        community={community} 
+                        showJoinButton={true}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
