@@ -15,6 +15,7 @@ import NewPost from './pages/Discussion/NewPost.jsx';
 import NewCommunity from './pages/Discussion/NewCommunity.jsx';
 import BottomBar from './pages/bottomBar';
 import { PostsProvider } from './context/PostsContext.jsx';
+import MoodCycleChart from "./pages/Home/MoodCycleChart";
 
 import React from "react";
 
@@ -64,6 +65,7 @@ function MainLayout() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/newpost" element={<NewPost />} />
           <Route path="/NewCommunity" element={<NewCommunity />} />
+          <Route path="/mood-cycle-chart" element={<MoodCycleChart />} />
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </div>
