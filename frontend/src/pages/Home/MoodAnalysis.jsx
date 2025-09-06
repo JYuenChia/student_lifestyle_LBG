@@ -365,9 +365,9 @@ export default function MoodAnalysis({ moodData }) {
 
   // Compute a left label width based on the longest y label (approximation)
   const longestLabelChars = Math.max(...yAxisLabels.map(l => l.label.length));
-  const approxCharWidth = 7;
-  // Make y axis closer to label: reduce leftLabelWidth and plotPadding
-  const leftLabelWidth = Math.max(0, longestLabelChars * approxCharWidth); // was +2, now -6 for closer
+  const approxCharWidth = 5; // increased from 7 for more space
+  // Increase leftLabelWidth for more space so labels are not cut off
+  const leftLabelWidth = Math.max(0, longestLabelChars * approxCharWidth + 4); // add extra padding
   const plotPadding = padding + leftLabelWidth; // was -10, now -26 for even closer
 
   // compute a total chart width based on number of points (so we can scroll if many)
@@ -722,7 +722,8 @@ export default function MoodAnalysis({ moodData }) {
       return (
         <g key={value}>
           <text
-            x={axisPadding - leftLabelWidth + 2} // was -2, now +2 for tight alignment
+            // Move label further left for visibility
+            x={axisPadding - leftLabelWidth +20} // was +2, now -2 for more space
             y={y + 5} // was +4, now +5 for vertical centering
             textAnchor="end"
             fontSize="15"
