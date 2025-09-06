@@ -366,117 +366,108 @@ export default function User() {
           alignItems: 'flex-start',
           marginBottom: '20px'
         }}>
-          <div style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '50%',
-            backgroundImage: 'url("/study1.jpg")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            marginRight: '16px',
-            border: '2px solid #f0f0f0'
-          }}>
+          <div style={{ marginRight: '16px' }}>
+            {/* Profile Picture */}
+            <div style={{
+              width: '100px',
+              height: '100px',
+              borderRadius: '50%',
+              backgroundImage: 'url("/study1.jpg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              border: '2px solid #f0f0f0'
+            }}>
+            </div>
           </div>
           
-          <div style={{ flex: 1 }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              marginBottom: '12px'
+          <div style={{ flex: 1, paddingTop: '10px' }}>
+            {/* Username */}
+            <h2 className="font-sans font-bold" style={{
+              fontSize: '22px',
+              color: '#333',
+              margin: '0',
+              lineHeight: '1.5'
             }}>
-              <h2 className="font-sans font-bold" style={{
-                fontSize: '22px',
-                color: '#333',
-                margin: 0
-              }}>
-                {userData.username}
-              </h2>
+              {userData.username}
+            </h2>
 
-              {/* Dropdowns Row - Moved to Right */}
+            {/* Today's Mood Display */}
+            <div style={{ marginTop: '5px' }}>
               <div style={{
+                background: 'transparent',
+                border: '1px solid #ddd',
+                borderRadius: '6px',
+                padding: '8px 12px',
+                fontSize: '10px',
+                color: '#666',
                 display: 'flex',
-                gap: '8px'
+                alignItems: 'center',
+                gap: '8px',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                marginBottom: '8px',
+                width: '87%'
               }}>
-                {/* Today's Mood - Static Display */}
-                <div style={{
-                  padding: '6px 12px',
-                  backgroundColor: '#f5f6f7',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '8px',
-                  fontSize: '12px',
+                <span>Today's Mood: {userData.mood}</span>
+              </div>
+            </div>
+
+            {/* Communities Joined Menu */}
+            <div 
+              className="dropdown-container"
+              style={{ position: 'relative' }}>
+              <button
+                onClick={() => setIsCommunitiesDropdownOpen(!isCommunitiesDropdownOpen)}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid #ddd',
+                  borderRadius: '6px',
+                  padding: '8px 12px',
+                  fontSize: '10px',
                   color: '#666',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  minWidth: '120px'
+                  gap: '8px',
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                  width: '100%',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <span>Communities Joined ({userData.joinedCommunities.length})</span>
+                <span style={{ fontSize: '10px' }}>▼</span>
+              </button>
+
+              {/* Communities Dropdown Menu */}
+              {isCommunitiesDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'white',
+                  border: '1px solid #ddd',
+                  borderRadius: '6px',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  zIndex: 100,
+                  maxHeight: '200px',
+                  overflowY: 'auto'
                 }}>
-                  <span>Today's Mood:</span>
-                  <span style={{ fontWeight: '500' }}>{userData.mood}</span>
-                </div>
-
-                {/* Communities Joined Dropdown */}
-                <div 
-                  className="dropdown-container"
-                  style={{
-                    position: 'relative',
-                    display: 'inline-block'
-                  }}>
-                  <button
-                    onClick={() => setIsCommunitiesDropdownOpen(!isCommunitiesDropdownOpen)}
-                    style={{
-                      padding: '6px 12px',
-                      backgroundColor: '#f5f6f7',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      fontSize: '12px',
-                      color: '#666',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      minWidth: '140px'
-                    }}
-                  >
-                    <span>Communities Joined</span>
-                    <span style={{ fontWeight: '500' }}>({userData.joinedCommunities.length})</span>
-                    <span style={{ fontSize: '10px' }}>▼</span>
-                  </button>
-
-                  {/* Communities Dropdown Menu */}
-                  {isCommunitiesDropdownOpen && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '100%',
-                      right: 0,
-                      backgroundColor: 'white',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                      zIndex: 10,
-                      minWidth: '200px',
-                      marginTop: '4px'
-                    }}>
-                      {userData.joinedCommunities.map((community, index) => (
-                        <div
-                          key={index}
-                          style={{
-                            padding: '8px 12px',
-                            fontSize: '14px',
-                            color: '#333',
-                            borderBottom: index < userData.joinedCommunities.length - 1 ? '1px solid #f0f0f0' : 'none',
-                            cursor: 'pointer'
-                          }}
-                          onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
-                          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                        >
-                          {community}
-                        </div>
-                      ))}
+                  {userData.joinedCommunities.map((community, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        padding: '10px 12px',
+                        borderBottom: index < userData.joinedCommunities.length - 1 ? '1px solid #f0f0f0' : 'none',
+                        fontSize: '10px',
+                        color: '#333',
+                        fontFamily: 'Inter, system-ui, sans-serif'
+                      }}
+                    >
+                      {community}
                     </div>
-                  )}
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

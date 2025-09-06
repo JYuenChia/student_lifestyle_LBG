@@ -75,7 +75,28 @@ export default function Discussion() {
     };
   }, []);
 
-  // Helper function to get the correct image source
+  // Helper function to get the correct image source for communities
+  const getCommunityImageSrc = (imagePath) => {
+    // If it's a URL (starts with http), return as is
+    if (imagePath && imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // If it's a File object (from user upload), create object URL
+    if (imagePath instanceof File) {
+      return URL.createObjectURL(imagePath);
+    }
+    
+    // If it's a local asset path, use the existing getImageSrc function
+    if (imagePath && typeof imagePath === 'string' && !imagePath.startsWith('http')) {
+      return getImageSrc(imagePath);
+    }
+    
+    // Fallback for emojis or invalid images
+    return null;
+  };
+
+  // Helper function to get the correct image source for posts
   const getImageSrc = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
@@ -174,14 +195,15 @@ export default function Discussion() {
       id: Date.now(), // Simple ID generation
       members: "1 member", // Creator is the first member
       type: "joined",
-      image: "📷" // Photo placeholder
+      // Use the uploaded image if available, otherwise fallback to emoji
+      image: newCommunity.image || "📷"
     };
     
     // Add to My Communities
     setMyCommunities(prev => [communityWithId, ...prev]);
     
     // Switch to Communities tab to show the new community
-    setSelectedTab('Communities');
+    setSelectedTab('Community');
   };
 
   const handleSearch = () => {
@@ -463,9 +485,28 @@ export default function Discussion() {
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: '24px',
-        marginRight: '12px'
+        marginRight: '12px',
+        overflow: 'hidden'
       }}>
-        {community.image}
+        {getCommunityImageSrc(community.image) ? (
+          <img 
+            src={getCommunityImageSrc(community.image)}
+            alt={community.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              borderRadius: '12px'
+            }}
+            onError={(e) => {
+              // Fallback to emoji if image fails to load
+              e.target.style.display = 'none';
+              e.target.parentNode.innerHTML = community.image.length <= 2 ? community.image : '📷';
+            }}
+          />
+        ) : (
+          community.image.length <= 2 ? community.image : '📷'
+        )}
       </div>
 
       {/* Community Info */}
@@ -551,9 +592,28 @@ export default function Discussion() {
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: '32px',
-        marginBottom: '12px'
+        marginBottom: '12px',
+        overflow: 'hidden'
       }}>
-        {community.image}
+        {getCommunityImageSrc(community.image) ? (
+          <img 
+            src={getCommunityImageSrc(community.image)}
+            alt={community.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              borderRadius: '16px'
+            }}
+            onError={(e) => {
+              // Fallback to emoji if image fails to load
+              e.target.style.display = 'none';
+              e.target.parentNode.innerHTML = community.image.length <= 2 ? community.image : '📷';
+            }}
+          />
+        ) : (
+          community.image.length <= 2 ? community.image : '📷'
+        )}
       </div>
 
       {/* Community Info */}
