@@ -114,7 +114,14 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
       </div>
 
       {/* Input area */}
-      <div style={{ display: "flex", gap: "5px", position: "relative" }}>
+      <div style={{ 
+        display: "flex", 
+        gap: "5px", 
+        position: "relative",
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "100%"
+      }}>
         {/* Text input */}
         <input
           type="text"
@@ -127,18 +134,21 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
             borderRadius: "20px",
             border: "1px solid #ccc",
             outline: "none",
+            minWidth: 0, // Prevents flex item from overflowing
+            maxWidth: "calc(100% - 120px)" // Reserve space for buttons
           }}
         />
         {/* Emoji picker placeholder */}
         <button
           style={{
-            padding: "0 12px",
+            padding: "8px 10px",
             borderRadius: "50%",
             border: "none",
             background: "transparent",
             color: "#000",
             cursor: "pointer",
             fontSize: "18px",
+            flexShrink: 0
           }}
         >
           😃
@@ -147,13 +157,14 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
         <button
           onClick={() => setShowOptions(!showOptions)}
           style={{
-            padding: "0 12px",
+            padding: "8px 10px",
             borderRadius: "50%",
             border: "none",
             background: "transparent",
             color: "#000",
             cursor: "pointer",
             fontSize: "16px",
+            flexShrink: 0
           }}
         >
           📎
@@ -162,12 +173,15 @@ export default function ChatWindow({ chat, goBack, sendMessage }) {
         <button
           onClick={handleSend}
           style={{
-            padding: "10px 20px",
+            padding: "8px 16px",
             borderRadius: "20px",
             border: "none",
             background: "royalblue",
             color: "#fff",
             cursor: "pointer",
+            fontSize: "14px",
+            flexShrink: 0,
+            minWidth: "60px"
           }}
         >
           Send

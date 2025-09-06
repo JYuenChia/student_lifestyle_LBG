@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import logo from '@/assets/images/logo.jpg';
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -65,7 +66,7 @@ export default function SignUp() {
           marginBottom: '30px'
         }}>
           <img
-            src="/pwa-192x192.png"
+            src={logo}
             alt="Logo"
             style={{
               width: '80px',
