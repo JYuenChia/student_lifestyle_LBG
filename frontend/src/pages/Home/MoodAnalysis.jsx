@@ -99,14 +99,29 @@ export default function MoodAnalysis({ moodData }) {
           {convertedData.map((d, i) => {
             const x = padding + i * xStep;
             const y = yScale(d.mood);
+            // Ensure d.emoji is a string (either emoji or data URL)
+            let emojiToRender = d.emoji;
+            if (typeof emojiToRender === "object" && emojiToRender !== null && "emoji" in emojiToRender) {
+              emojiToRender = emojiToRender.emoji;
+            }
             return (
               <g key={i}>
                 <circle cx={x} cy={y} r="3" fill="#3b82f6" />
-                {/* If emoji is a data URL, don't render it as text */}
-                {typeof d.emoji === "string" && d.emoji.startsWith("data:") ? null : (
-                  <text x={x} y={y - 10} fontSize="14" textAnchor="middle">
-                    {d.emoji}
-                  </text>
+                {/* If emoji is a data URL, render as image; else as text */}
+                {typeof emojiToRender === "string" && emojiToRender.startsWith("data:") ? (
+                  <image
+                    href={emojiToRender}
+                    x={x - 10}
+                    y={y - 30}
+                    width={20}
+                    height={20}
+                  />
+                ) : (
+                  typeof emojiToRender === "string" && (
+                    <text x={x} y={y - 10} fontSize="14" textAnchor="middle">
+                      {emojiToRender}
+                    </text>
+                  )
                 )}
               </g>
             );

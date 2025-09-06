@@ -87,6 +87,14 @@ export default function Home() {
       : "";
   }
 
+  // Utility to get emoji string from moodData value
+  function getEmojiString(moodValue) {
+    if (typeof moodValue === "object" && moodValue !== null && "emoji" in moodValue) {
+      return moodValue.emoji;
+    }
+    return moodValue;
+  }
+
   // Handlers (same as before, not removing)
   function handleSaveJournal({ mood, emoji, scale, journal }) {
     const todayStr = getTodayDateStr();
@@ -325,7 +333,12 @@ export default function Home() {
             setSelectedMonth={setSelectedMonth}
             setSelectedYear={setSelectedYear}
             setSelectedDate={setSelectedDate}
-            moodData={moodData}
+            // Pass emoji-only moodData for rendering
+            moodData={Object.fromEntries(
+              Object.entries(moodData).map(([date, value]) => [date, getEmojiString(value)])
+            )}
+            // Pass original moodData for custom logic
+            originalMoodData={moodData}
             journalEntries={journalEntries}
           />
         )}
@@ -336,7 +349,12 @@ export default function Home() {
 
         {selectedTab === "Period Tracker" && (
           <PeriodTracker
-            moodData={moodData}
+            // Pass emoji-only moodData for rendering
+            moodData={Object.fromEntries(
+              Object.entries(moodData).map(([date, value]) => [date, getEmojiString(value)])
+            )}
+            // Pass original moodData for custom logic
+            originalMoodData={moodData}
             // Optionally pass cycleLength and lastPeriodDate as props if needed
           />
         )}

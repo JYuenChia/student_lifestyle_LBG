@@ -1,7 +1,10 @@
 // PeriodTracker.jsx
 import React, { useState, useMemo } from "react";
 
-function PeriodTracker({ cycleLength = 28, lastPeriodDate = "2025-09-01", moodData }) {
+// Add originalMoodData to props if you need to use the scale or other info
+export default function PeriodTracker({ moodData, originalMoodData /*, ...otherProps */ }) {
+  const cycleLength = 28;
+  const lastPeriodDate = "2025-09-01";
   const [selectedDate, setSelectedDate] = useState(null);
   const today = new Date();
 
@@ -112,5 +115,3 @@ function PeriodTracker({ cycleLength = 28, lastPeriodDate = "2025-09-01", moodDa
     </div>
   );
 }
-
-export default PeriodTracker;

@@ -10,6 +10,7 @@ export default function Calendar({
   setSelectedYear,
   setSelectedDate,
   moodData,
+  originalMoodData, // <-- add this prop
   journalEntries,
 }) {
   // Helper to get days in month and first day of week
