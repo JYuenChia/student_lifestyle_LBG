@@ -1,9 +1,40 @@
-import { useState, useEffect } from "react";
-import MoodPicker from "./MoodPicker";
-import EditJournalWindow from "./EditJournal";
-import Calendar from "./Calendar";
-import MoodAnalysis from "./MoodAnalysis";
-import PeriodTracker from "./PeriodTracker"; // Add this import
+import { useState, useEffect, Suspense, lazy } from "react";
+
+// Lazy load Home components
+const MoodPicker = lazy(() => import("./MoodPicker"));
+const EditJournalWindow = lazy(() => import("./EditJournal"));
+const Calendar = lazy(() => import("./Calendar"));
+const MoodAnalysis = lazy(() => import("./MoodAnalysis"));
+const PeriodTracker = lazy(() => import("./PeriodTracker"));
+
+// Loading component for Home components
+const HomeComponentLoader = () => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '300px',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px'
+  }}>
+    <div style={{
+      width: '25px',
+      height: '25px',
+      border: '3px solid #f3f3f3',
+      borderTop: '3px solid #38b6ff',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite'
+    }}></div>
+    <style>
+      {`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}
+    </style>
+  </div>
+);
 
 export default function Home() {
   // console.log("Home component rendered"); // Debug log
@@ -182,43 +213,49 @@ export default function Home() {
   // MoodPicker modal
   if (shouldShowMoodPicker) {
     return (
-      <MoodPicker
-        onClose={() => {
-          setShowMoodPicker(false);
-          setEditingTodayJournal(false);
-          setEditJournalValue("");
-        }}
-        onSave={handleSaveJournal}
-        editJournalValue={editingTodayJournal ? editJournalValue : undefined}
-      />
+      <Suspense fallback={<HomeComponentLoader />}>
+        <MoodPicker
+          onClose={() => {
+            setShowMoodPicker(false);
+            setEditingTodayJournal(false);
+            setEditJournalValue("");
+          }}
+          onSave={handleSaveJournal}
+          editJournalValue={editingTodayJournal ? editJournalValue : undefined}
+        />
+      </Suspense>
     );
   }
 
   if (showMoodPicker && editingTodayJournal) {
     return (
-      <MoodPicker
-        onClose={() => {
-          setShowMoodPicker(false);
-          setEditingTodayJournal(false);
-          setEditJournalValue("");
-        }}
-        onSave={handleSaveJournal}
-        editJournalValue={editJournalValue}
-        editingTodayJournal={true}
-      />
+      <Suspense fallback={<HomeComponentLoader />}>
+        <MoodPicker
+          onClose={() => {
+            setShowMoodPicker(false);
+            setEditingTodayJournal(false);
+            setEditJournalValue("");
+          }}
+          onSave={handleSaveJournal}
+          editJournalValue={editJournalValue}
+          editingTodayJournal={true}
+        />
+      </Suspense>
     );
   }
 
   if (showEditJournalWindow) {
     return (
-      <EditJournalWindow
-        emoji={editJournalEmoji}
-        journal={editJournalValue}
-        onChangeJournal={setEditJournalValue}
-        onEditEmoji={handleEditJournalEmoji}
-        onDone={handleEditJournalDone}
-        onCancel={handleEditJournalCancel}
-      />
+      <Suspense fallback={<HomeComponentLoader />}>
+        <EditJournalWindow
+          emoji={editJournalEmoji}
+          journal={editJournalValue}
+          onChangeJournal={setEditJournalValue}
+          onEditEmoji={handleEditJournalEmoji}
+          onDone={handleEditJournalDone}
+          onCancel={handleEditJournalCancel}
+        />
+      </Suspense>
     );
   }
 
@@ -323,41 +360,43 @@ export default function Home() {
 
       {/* Tabs Content */}
       <div className="mt-6">
-        {selectedTab === "Calendar" && (
-          <Calendar
-            months={months}
-            years={years}
-            selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
-            selectedDate={selectedDate}
-            setSelectedMonth={setSelectedMonth}
-            setSelectedYear={setSelectedYear}
-            setSelectedDate={setSelectedDate}
-            // Pass emoji-only moodData for rendering
-            moodData={Object.fromEntries(
-              Object.entries(moodData).map(([date, value]) => [date, getEmojiString(value)])
-            )}
-            // Pass original moodData for custom logic
-            originalMoodData={moodData}
-            journalEntries={journalEntries}
-          />
-        )}
+        <Suspense fallback={<HomeComponentLoader />}>
+          {selectedTab === "Calendar" && (
+            <Calendar
+              months={months}
+              years={years}
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              selectedDate={selectedDate}
+              setSelectedMonth={setSelectedMonth}
+              setSelectedYear={setSelectedYear}
+              setSelectedDate={setSelectedDate}
+              // Pass emoji-only moodData for rendering
+              moodData={Object.fromEntries(
+                Object.entries(moodData).map(([date, value]) => [date, getEmojiString(value)])
+              )}
+              // Pass original moodData for custom logic
+              originalMoodData={moodData}
+              journalEntries={journalEntries}
+            />
+          )}
 
-        {selectedTab === "Mood Analysis" && (
-          <MoodAnalysis moodData={moodData} /> 
-        )}
+          {selectedTab === "Mood Analysis" && (
+            <MoodAnalysis moodData={moodData} /> 
+          )}
 
-        {selectedTab === "Period Tracker" && (
-          <PeriodTracker
-            // Pass emoji-only moodData for rendering
-            moodData={Object.fromEntries(
-              Object.entries(moodData).map(([date, value]) => [date, getEmojiString(value)])
-            )}
-            // Pass original moodData for custom logic
-            originalMoodData={moodData}
-            // Optionally pass cycleLength and lastPeriodDate as props if needed
-          />
-        )}
+          {selectedTab === "Period Tracker" && (
+            <PeriodTracker
+              // Pass emoji-only moodData for rendering
+              moodData={Object.fromEntries(
+                Object.entries(moodData).map(([date, value]) => [date, getEmojiString(value)])
+              )}
+              // Pass original moodData for custom logic
+              originalMoodData={moodData}
+              // Optionally pass cycleLength and lastPeriodDate as props if needed
+            />
+          )}
+        </Suspense>
       </div>
     </div>
   );

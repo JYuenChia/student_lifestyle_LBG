@@ -1,8 +1,39 @@
 // src/pages/Chat/Chat.jsx
-import { useState } from "react";
-import ChatList from "./ChatList.jsx";
-import ChatWindow from "./ChatWindow.jsx";
+import { useState, Suspense, lazy } from "react";
 import mockCommunities from "../../data/mockCommunities.json";
+
+// Lazy load chat components
+const ChatList = lazy(() => import("./ChatList.jsx"));
+const ChatWindow = lazy(() => import("./ChatWindow.jsx"));
+
+// Loading component for chat components
+const ChatLoadingSpinner = () => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '200px',
+    backgroundColor: 'white',
+    borderRadius: '10px'
+  }}>
+    <div style={{
+      width: '30px',
+      height: '30px',
+      border: '3px solid #f3f3f3',
+      borderTop: '3px solid #38b6ff',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite'
+    }}></div>
+    <style>
+      {`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}
+    </style>
+  </div>
+);
 
 // Dynamic image loading with Vite
 const images = import.meta.glob('../../assets/images/*.{jpg,jpeg,png,gif}', { eager: true });
@@ -296,15 +327,17 @@ export default function ChatPage() {
 
       {/* Chat Window or Chat List */}
       <div style={{ flex: 1 }}>
-        {activeChat ? (
-          <ChatWindow
-            chat={activeChat}
-            goBack={goBack}
-            sendMessage={(msg) => sendMessage(activeChat.id, msg)}
-          />
-        ) : (
-          <ChatList chats={chats} openChat={openChat} />
-        )}
+        <Suspense fallback={<ChatLoadingSpinner />}>
+          {activeChat ? (
+            <ChatWindow
+              chat={activeChat}
+              goBack={goBack}
+              sendMessage={(msg) => sendMessage(activeChat.id, msg)}
+            />
+          ) : (
+            <ChatList chats={chats} openChat={openChat} />
+          )}
+        </Suspense>
       </div>
     </div>
   );
