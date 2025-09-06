@@ -11,6 +11,7 @@ import HomePage from './pages/Home/Home.jsx';
 import MainToDo from './pages/ToDoList/MainToDo.jsx';
 import SettingPage from './pages/Settings/SettingPage.jsx';
 import Profile from './pages/Discussion/Profile.jsx';
+import User from './pages/Discussion/User.jsx';
 import NewPost from './pages/Discussion/NewPost.jsx';
 import NewCommunity from './pages/Discussion/NewCommunity.jsx';
 import BottomBar from './pages/bottomBar';
@@ -63,6 +64,7 @@ function MainLayout() {
           <Route path="/todo" element={<MainToDo />} />
           <Route path="/settingpage" element={<SettingPage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/user/:username" element={<User />} />
           <Route path="/newpost" element={<NewPost />} />
           <Route path="/NewCommunity" element={<NewCommunity />} />
           <Route path="/signup" element={<SignUp />} />

@@ -257,17 +257,31 @@ export default function Discussion() {
           {post.user.charAt(0)}
         </div>
         <div style={{ flex: 1 }}>
-            <div
-              className="font-sans font-semibold"
+            <button
+              onClick={() => navigate(`/user/${post.user}`)}
               style={{
-                fontSize: '14px',
-                color: '#333',
-                fontWeight: 600,
-                marginBottom: '2px'
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                textAlign: 'left'
               }}
             >
-              {post.user}
-            </div>
+              <div
+                className="font-sans font-semibold"
+                style={{
+                  fontSize: '14px',
+                  color: '#333',
+                  fontWeight: 600,
+                  marginBottom: '2px',
+                  textDecoration: 'none'
+                }}
+                onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
+                onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+              >
+                {post.user}
+              </div>
+            </button>
             <div
               className="font-sans"
               style={{
