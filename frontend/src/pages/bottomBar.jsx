@@ -7,9 +7,9 @@ export default function BottomBar() {
   const icons = [
     { name: 'chat', src: 'chat.png', alt: 'Chat', to: '/message' },
     { name: 'discussion', src: 'community.png', alt: 'Discussion', to: '/discussion' },
-    { name: 'home', src: 'home.png', alt: 'Home', to: '/' },
+    { name: 'home', src: 'home.png', alt: 'Home', to: '/home' },
     { name: 'goal', src: 'goal.png', alt: 'Goal', to: '/todo' },
-    { name: 'settings', src: 'settings.png', alt: 'Settings', to: '/setting' },
+    { name: 'settings', src: 'settings.png', alt: 'Settings', to: '/settingpage' },
   ];
 
   // Determine selected icon based on current route
