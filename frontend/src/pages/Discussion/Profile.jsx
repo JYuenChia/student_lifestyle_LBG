@@ -162,7 +162,7 @@ export default function Profile() {
               />
             </div>
 
-            {/* Username only (removed bio from here) */}
+            {/* Username only */}
             <div style={{ flex: 1, paddingTop: '10px' }}>
               {/* Username */}
               <h1 className="font-sans text-3xl font-bold text-gray-800" style={{

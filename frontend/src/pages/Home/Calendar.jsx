@@ -10,6 +10,7 @@ export default function Calendar({
   setSelectedYear,
   setSelectedDate,
   moodData,
+  originalMoodData, // <-- add this prop
   journalEntries,
 }) {
   // Helper to get days in month and first day of week
@@ -19,6 +20,24 @@ export default function Calendar({
     const daysInMonth = new Date(Number(year), monthIndex + 1, 0).getDate();
     const firstDay = date.getDay();
     return { daysInMonth, firstDay };
+  }
+
+  const moodEmojis = {
+    Happy: "😊",
+    Loving: "❤️",
+    Stress: "😖",
+    Mad: "😡",
+    Sad: "😢",
+    Bored: "😐",
+    Fear: "😨",
+    Custom: "➕",
+  };
+
+  function getMoodLabelFromEmoji(emoji) {
+    for (const [label, char] of Object.entries(moodEmojis)) {
+      if (char === emoji) return label;
+    }
+    return emoji;
   }
 
   // Helper to render emoji or custom emoji image
@@ -43,18 +62,37 @@ export default function Calendar({
     if (typeof mood === "string" && mood.length <= 3 && /\p{Emoji}/u.test(mood)) {
       return <span style={{ fontSize: "20px", lineHeight: "1" }}>{mood}</span>;
     }
-    const moodEmojis = {
-      Happy: "😊",
-      Loving: "❤️",
-      Stress: "😖",
-      Mad: "😡",
-      Sad: "😢",
-      Bored: "😐",
-      Fear: "😨",
-      Custom: "➕",
-    };
     if (typeof mood === "string" && moodEmojis[mood]) {
-      return <span style={{ fontSize: "20px", lineHeight: "1" }}>{moodEmojis[mood]}</span>;
+      return (
+        <img
+          src={`emojis/${mood}.png`}
+          alt={mood}
+          style={{
+            width: 20,
+            height: 20,
+            objectFit: "contain",
+            display: "block",
+            margin: "0 auto",
+          }}
+        />
+      );
+    }
+    // If mood is an emoji character, map to label
+    const label = getMoodLabelFromEmoji(mood);
+    if (label && moodEmojis[label]) {
+      return (
+        <img
+          src={`emojis/${label}.png`}
+          alt={label}
+          style={{
+            width: 20,
+            height: 20,
+            objectFit: "contain",
+            display: "block",
+            margin: "0 auto",
+          }}
+        />
+      );
     }
     return <span style={{ fontSize: "20px", lineHeight: "1" }}>{mood}</span>;
   }

@@ -1,5 +1,23 @@
 import React from "react";
 
+const moodEmojis = {
+  Happy: "😊",
+  Loving: "❤️",
+  Stress: "😖",
+  Mad: "😡",
+  Sad: "😢",
+  Bored: "😐",
+  Fear: "😨",
+  Custom: "➕",
+};
+
+function getMoodLabelFromEmoji(emoji) {
+  for (const [label, char] of Object.entries(moodEmojis)) {
+    if (char === emoji) return label;
+  }
+  return emoji;
+}
+
 export default function EditJournalWindow({
   emoji,
   journal,
@@ -72,7 +90,16 @@ export default function EditJournalWindow({
               }}
             />
           ) : (
-            <span style={{ fontSize: 32, color: "#fff" }}>{emoji}</span>
+            <img
+              src={`emojis/${getMoodLabelFromEmoji(emoji)}.png`} // Use mood label as filename
+              alt={emoji}
+              style={{
+                width: 48,
+                height: 48,
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
           )}
         </div>
         {/* Edit emoji button */}
@@ -109,13 +136,13 @@ export default function EditJournalWindow({
             color: "#222",
             borderRadius: "14px",
             padding: "14px",
-            marginBottom: 18,
+            marginBottom: "24px", // Increased margin for spacing
             resize: "vertical",
             outline: "none",
           }}
         />
         {/* Done and Cancel buttons */}
-        <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
+        <div style={{ display: "flex", gap: "20px", marginBottom: "24px" }}>
           <button
             onClick={onCancel}
             style={{

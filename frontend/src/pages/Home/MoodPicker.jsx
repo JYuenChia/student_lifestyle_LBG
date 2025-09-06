@@ -22,6 +22,7 @@ export default function MoodPicker({ onClose, onSave, editJournalValue, editingT
   const [showCustom, setShowCustom] = useState(false);
   const [customLabel, setCustomLabel] = useState("");
   const [customDataUrl, setCustomDataUrl] = useState(null);
+  const [customScale, setCustomScale] = useState(3); // Default neutral
   const canvasRef = useRef(null);
   const [drawing, setDrawing] = useState(false);
 
@@ -76,23 +77,27 @@ export default function MoodPicker({ onClose, onSave, editJournalValue, editingT
         <Journal
           mood={selectedMood === "Custom" ? customLabel : selectedMood}
           customEmoji={selectedMood === "Custom" ? customDataUrl : undefined}
+          customScale={selectedMood === "Custom" ? customScale : undefined}
           onBack={() => {
             setShowJournal(false);
             setSelectedMood(null);
             setCustomLabel("");
             setCustomDataUrl(null);
+            setCustomScale(3);
           }}
           onSave={({ journal }) => {
             onSave &&
               onSave({
                 mood: selectedMood === "Custom" ? customLabel : selectedMood,
                 emoji: selectedMood === "Custom" ? customDataUrl : undefined,
+                scale: selectedMood === "Custom" ? customScale : undefined,
                 journal,
               });
             setShowJournal(false);
             setSelectedMood(null);
             setCustomLabel("");
             setCustomDataUrl(null);
+            setCustomScale(3);
           }}
           editJournalValue={editJournalValue}
         />
@@ -233,11 +238,42 @@ export default function MoodPicker({ onClose, onSave, editJournalValue, editingT
               border: "1.5px solid #e0e3e7",
               fontFamily: "'Canva Sans', sans-serif",
               fontSize: 15,
-              marginBottom: 18,
+              marginBottom: "24px", // Increased margin for spacing
               outline: "none",
             }}
           />
-          <div style={{ display: "flex", gap: 12, width: "100%", justifyContent: "center" }}>
+          {/* Custom scale slider */}
+          <div style={{ width: "80%", marginBottom: 24 }}>
+            <label
+              htmlFor="custom-scale"
+              style={{
+                fontFamily: "'Canva Sans', sans-serif",
+                fontWeight: 500,
+                fontSize: 15,
+                color: "#222",
+                display: "block",
+                marginBottom: 6,
+                textAlign: "center",
+              }}
+            >
+              Mood scale: <span style={{ fontWeight: 700, color: "#38b6ff" }}>{customScale}</span>
+            </label>
+            <input
+              id="custom-scale"
+              type="range"
+              min={1}
+              max={5}
+              step={1}
+              value={customScale}
+              onChange={e => setCustomScale(Number(e.target.value))}
+              style={{ width: "100%" }}
+            />
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#888" }}>
+              <span>1</span>
+              <span>5</span>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "20px", width: "100%", justifyContent: "center" }}>
             <button
               onClick={() => setShowCustom(false)}
               style={{

@@ -5,7 +5,7 @@
       "name": "UM FSKTM",
       "description": "Homework Heroes",
       "members": "1k members",
-      "image": "👨‍💻",
+      "image": "https://scontent.fkul8-2.fna.fbcdn.net/v/t39.30808-6/300364562_570688384761124_7095574042793283389_n.png?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=TUVSs9rZceYQ7kNvwG8HELe&_nc_oc=AdkBCPwc910dHl6Dgo6et8sd_kHtLGRUUqAJa7nEc-_Rmu5lxOsAyv-VZf34NCCRIO_YxKr11NqKD5_Zpkffvi6e&_nc_zt=23&_nc_ht=scontent.fkul8-2.fna&_nc_gid=pqjQ7NJ0yQBuKHVxKtjTqg&oh=00_AfaZWP-9a0g50KRD2f9fVmdheAppzB8EjzYtv00bCG4uvg&oe=68C1AE51",
       "type": "joined"
     },
     {
@@ -13,7 +13,7 @@
       "name": "Chill Corner",
       "description": "Relaxation zone",
       "members": "12k members", 
-      "image": "🛋️",
+      "image": "https://cimg.co/wp-content/uploads/2024/11/29114259/1732880579-chillhuy-banner.jpg",
       "type": "joined"
     },
     {
@@ -21,7 +21,7 @@
       "name": "UPU Discussion Room",
       "description": "Study buddies",
       "members": "5k members", 
-      "image": "📚",
+      "image": "https://assets.nst.com.my/images/articles/bonn24_NSTfield_image_socialmedia.var_1675670428.jpg",
       "type": "joined"
     }
 
@@ -32,7 +32,7 @@
       "name": "Everyday Quotes",
       "description": "Daily motivation",
       "members": "15+ members",
-      "image": "📝",
+      "image": "https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=",
       "type": "recommended"
     },
     {
@@ -40,7 +40,7 @@
       "name": "UPM volleyball gang",
       "description": "Sports enthusiasts",
       "members": "100+ members",
-      "image": "🏐",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdf9z5RmT-zq6sofIWJPVteT85wKFK1Btlag&s",
       "type": "recommended"
     },
     {
@@ -48,7 +48,7 @@
       "name": "BTS Army Club",
       "description": "K-pop fans unite",
       "members": "1.3k+ members",
-      "image": "🎵",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeqPVYpED8bOY8QumZ1wPECCZlWO1iEwS6bg&s",
       "type": "recommended"
     }
   ]
