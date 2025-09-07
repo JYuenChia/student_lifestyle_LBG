@@ -102,22 +102,10 @@ function MainLayout() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<HomePage />} />
+            <Route path="/mood-cycle-chart" element={<MoodCycleChart />} />
             <Route path="*" element={<div>Page Not Found</div>} />
           </Routes>
         </Suspense>
-        <div style={{color: 'red', fontWeight: 'bold'}}>MainLayout is rendering</div>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/message" element={<MessagePage />} /> {/* Corrected path */}
-          <Route path="/discussion" element={<DiscussionPage />} />
-          <Route path="/todo" element={<MainToDo />} />
-          <Route path="/setting" element={<SettingPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/newpost" element={<NewPost />} />
-          <Route path="/NewCommunity" element={<NewCommunity />} />
-          <Route path="/mood-cycle-chart" element={<MoodCycleChart />} />
-          <Route path="*" element={<div>Page Not Found</div>} />
-        </Routes>
       </div>
       {!hideBottomBar && <BottomBar />} {/* Ensure BottomBar is conditionally rendered */}
     </div>
