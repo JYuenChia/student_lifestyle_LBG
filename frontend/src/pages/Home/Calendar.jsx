@@ -10,7 +10,7 @@ export default function Calendar({
   setSelectedYear,
   setSelectedDate,
   moodData,
-  originalMoodData, // <-- add this prop
+  originalMoodData,
   journalEntries,
 }) {
   // Helper to get days in month and first day of week
@@ -187,83 +187,113 @@ export default function Calendar({
   }
 
   return (
-    <div className="p-6 bg-card">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-foreground mb-2">Calendar</h2>
+    <div
+      className="p-6"
+      style={{
+        maxWidth: 540,
+        margin: "0 auto",
+        fontFamily: "'Canva Sans', sans-serif",
+        fontSize: 16,
+        background: "#f8fafc",
+        borderRadius: 18,
+        boxShadow: "0 4px 24px 0 rgba(56,182,255,0.06)",
+        border: "1.5px solid #e0e3e7",
+      }}
+    >
+      <h2
+        style={{
+          fontSize: 22,
+          fontWeight: 800,
+          color: "#2563eb",
+          marginBottom: 18,
+          letterSpacing: "0.01em",
+        }}
+      >
+        Calendar
+      </h2>
 
-        {/* Month/Year Selection */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            background: "#f5f6f7",
-            borderRadius: "14px",
-            padding: "0 20px",
-            height: "48px",
-            width: "fit-content",
-            minWidth: "220px",
-            marginBottom: "12px",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-            border: "1.5px solid #e0e3e7",
-            gap: "12px",
-            fontFamily: "'Canva Sans', sans-serif",
-            position: "relative",
-          }}
-        >
-          <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-            <select
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              style={{
-                border: "1px solid #d1eaff",
-                background: "#fff",
-                fontSize: "16px",
-                fontWeight: 600,
-                fontFamily: "'Canva Sans', sans-serif",
-                color: "#222",
-                outline: "none",
-                cursor: "pointer",
-                padding: "8px 32px 8px 12px",
-                borderRadius: "8px",
-              }}
-            >
-              {months.map((month) => (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* Month/Year Selection */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          background: "#f5f6f7",
+          borderRadius: "14px",
+          padding: "0 20px",
+          height: "48px",
+          width: "fit-content",
+          minWidth: "220px",
+          marginBottom: "18px",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+          border: "1.5px solid #e0e3e7",
+          gap: "12px",
+          fontFamily: "'Canva Sans', sans-serif",
+          position: "relative",
+        }}
+      >
+        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            style={{
+              border: "1px solid #d1eaff",
+              background: "#fff",
+              fontSize: "16px",
+              fontWeight: 600,
+              fontFamily: "'Canva Sans', sans-serif",
+              color: "#222",
+              outline: "none",
+              cursor: "pointer",
+              padding: "8px 32px 8px 12px",
+              borderRadius: "8px",
+              marginRight: 8,
+            }}
+          >
+            {months.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              style={{
-                border: "1px solid #d1eaff",
-                background: "#fff",
-                fontSize: "16px",
-                fontWeight: 600,
-                fontFamily: "'Canva Sans', sans-serif",
-                color: "#38b6ff",
-                outline: "none",
-                cursor: "pointer",
-                padding: "8px 32px 8px 12px",
-                borderRadius: "8px",
-              }}
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            style={{
+              border: "1px solid #d1eaff",
+              background: "#fff",
+              fontSize: "16px",
+              fontWeight: 600,
+              fontFamily: "'Canva Sans', sans-serif",
+              color: "#38b6ff",
+              outline: "none",
+              cursor: "pointer",
+              padding: "8px 32px 8px 12px",
+              borderRadius: "8px",
+            }}
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
       {/* Calendar Grid */}
-      <div className="mb-6">
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: 18,
+          border: "1.5px solid #e0e3e7",
+          padding: "18px 12px 18px 12px",
+          marginBottom: 24,
+          boxShadow: "0 2px 8px rgba(56,182,255,0.04)",
+        }}
+      >
         <div className="grid grid-cols-7 gap-2 mb-2">
           {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
             <div
@@ -276,6 +306,10 @@ export default function Calendar({
                 minHeight: "32px",
                 background: "#f5f6f7",
                 borderRadius: "8px",
+                color: "#2563eb",
+                fontWeight: 700,
+                fontSize: 15,
+                letterSpacing: "0.01em",
               }}
             >
               {day}
@@ -297,14 +331,58 @@ export default function Calendar({
 
       {/* Journal Section */}
       {selectedDate && getJournalForSelectedDate() && (
-        <div>
-          <h3 className="text-lg font-bold text-foreground mb-4">
-            My Journal on {selectedDate} {selectedMonth} {selectedYear}...
+        <div
+          style={{
+            background: "#f5faff",
+            borderRadius: 16,
+            border: "1.5px solid #e0e3e7",
+            padding: "18px 18px 12px 18px",
+            margin: "0 auto 0 auto",
+            marginBottom: 0,
+            maxWidth: 420,
+            boxShadow: "0 2px 8px rgba(56,182,255,0.06)",
+          }}
+        >
+          <h3
+            className="text-lg font-bold text-foreground mb-4"
+            style={{
+              fontSize: 18,
+              color: "#2563eb",
+              fontWeight: 700,
+              marginBottom: 12,
+              letterSpacing: "0.01em",
+              textAlign: "center",
+            }}
+          >
+            My Journal on {selectedDate} {selectedMonth} {selectedYear}
           </h3>
           <div className="space-y-3">
             {getJournalForSelectedDate().map((entry, index) => (
-              <div key={index} className="bg-muted rounded-lg p-3 border border-border">
-                <p className="text-sm text-muted-foreground leading-relaxed">"{entry}"</p>
+              <div
+                key={index}
+                style={{
+                  background: "#fff",
+                  borderRadius: 12,
+                  border: "1.5px solid #e0e3e7",
+                  padding: "14px 16px",
+                  marginBottom: 10,
+                  fontSize: 15,
+                  color: "#374151",
+                  fontFamily: "'Canva Sans', sans-serif",
+                  boxShadow: "0 1px 4px rgba(56,182,255,0.04)",
+                }}
+              >
+                <p
+                  className="text-sm text-muted-foreground leading-relaxed"
+                  style={{
+                    margin: 0,
+                    fontSize: 15,
+                    color: "#374151",
+                    lineHeight: 1.7,
+                  }}
+                >
+                  "{entry}"
+                </p>
               </div>
             ))}
           </div>
