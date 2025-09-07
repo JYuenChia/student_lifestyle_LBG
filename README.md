@@ -2,6 +2,7 @@
 ## 👥 Team
 - Group Name: Lam Bo Guan
 - Group Members: Chia Jing Yuen, Ke Cee Sing, Teo Jing Ying, Tan Yen Yee
+- Presentation Slide link: https://www.canva.com/design/DAGyHvUz96E/QOmdD81qNLi1rWkjBzh2gg/edit?utm_content=DAGyHvUz96E&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton 
 
 #  Mental Health Support for Students (Mobile Application)
 
