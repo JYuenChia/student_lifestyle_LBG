@@ -48,20 +48,20 @@ By combining **self-care, peer connection, and academic management tools**, the 
 ---
 
 ### 3. Discussion
-**a. Seek Help / Give Help**  
-- Discussion area for students to share diaries or questions  
+**a. Seek Help / Give Support**  
+- Discussion area for students to share diaries  
 - Ask questions about stress & receive supportive comments  
 - Can request follow and chat with other users
 - Can check favourites and posts in the personal profile page 
 
 **b. Community Goals (Study Buddy)**  
-- Students create personal goals (e.g., *“Finish Lab Report by Sep 3”*)  
+- Students create personal goals (e.g., *“Finish Lab Report”*)  
 - Option: *Allow others to join* (public by default, can be set private)  
 - Public community will be shown in the community page
 - Other users can choose to join their interested community 
 - After joining, a **group chat is auto-created** in the Messages section  
 
-**c. Profile Page  
+**c. Profile Page**
 - Display profile photo, username, and personal status/bio  
 - Manage mood (dropdown for daily mood selection)  
 - View communities joined  
