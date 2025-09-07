@@ -192,6 +192,7 @@ function generateSampleData(startStr = "2025-01-01", endStr = "2025-09-30") {
    ------------------------- */
 export default function MoodAnalysis({ moodData }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [clickedIndex, setClickedIndex] = useState(null);
   const [chartView, setChartView] = useState("Daily");
   const [fadeKey, setFadeKey] = useState(0);
 
@@ -206,6 +207,48 @@ export default function MoodAnalysis({ moodData }) {
 
   // generate sample data (memoized so it doesn't change on every render)
   const sampleData = useMemo(() => generateSampleData("2025-01-01", "2025-09-30"), []);
+
+  // Add timeout management for clicked state
+  const clickTimeoutRef = useRef(null);
+
+  // Clear timeout when component unmounts
+  useEffect(() => {
+    return () => {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Handle click with persistent tooltip
+  const handleChartClick = (index) => {
+    setClickedIndex(index);
+    setHoveredIndex(index);
+    
+    // Clear any existing timeout
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+    
+    // Set new timeout to clear clicked state after 3 seconds
+    clickTimeoutRef.current = setTimeout(() => {
+      setClickedIndex(null);
+      setHoveredIndex(null);
+    }, 3000);
+  };
+
+  // Modified hover handlers that respect clicked state
+  const handleMouseEnter = (index) => {
+    if (clickedIndex === null) {
+      setHoveredIndex(index);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (clickedIndex === null) {
+      setHoveredIndex(null);
+    }
+  };
 
   // convertedData depends on selected view
   const convertedData = useMemo(() => {
@@ -465,9 +508,9 @@ export default function MoodAnalysis({ moodData }) {
             return (
               <g
                 key={i}
-                onMouseEnter={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                onClick={() => setHoveredIndex(i)}
+                onMouseEnter={() => handleMouseEnter(i)}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => handleChartClick(i)}
                 style={{ cursor: "pointer" }}
               >
                 <circle
@@ -512,9 +555,9 @@ export default function MoodAnalysis({ moodData }) {
               return (
                 <g
                   key={i}
-                  onMouseEnter={() => setHoveredIndex(i)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() => setHoveredIndex(i)}
+                  onMouseEnter={() => handleMouseEnter(i)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleChartClick(i)}
                   style={{ cursor: "pointer" }}
                 >
                   {hoveredIndex === i && (
@@ -571,9 +614,9 @@ export default function MoodAnalysis({ moodData }) {
               return (
                 <g
                   key={i}
-                  onMouseEnter={() => setHoveredIndex(i)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() => setHoveredIndex(i)}
+                  onMouseEnter={() => handleMouseEnter(i)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleChartClick(i)}
                   style={{ cursor: "pointer" }}
                 >
                   <circle
@@ -619,9 +662,9 @@ export default function MoodAnalysis({ moodData }) {
               return (
                 <g
                   key={i}
-                  onMouseEnter={() => setHoveredIndex(i)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() => setHoveredIndex(i)}
+                  onMouseEnter={() => handleMouseEnter(i)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleChartClick(i)}
                   style={{ cursor: "pointer" }}
                 >
                   {hoveredIndex === i && (
@@ -678,9 +721,9 @@ export default function MoodAnalysis({ moodData }) {
               return (
                 <g
                   key={i}
-                  onMouseEnter={() => setHoveredIndex(i)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() => setHoveredIndex(i)}
+                  onMouseEnter={() => handleMouseEnter(i)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleChartClick(i)}
                   style={{ cursor: "pointer" }}
                 >
                   <circle
@@ -912,7 +955,17 @@ export default function MoodAnalysis({ moodData }) {
       {/* Tabs */}
       <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
         {["Daily", "Weekly", "Monthly"].map(v => (
-          <button key={v} onClick={() => { setChartView(v); setFadeKey(k => k + 1); setScrollX(0); }} style={{
+          <button key={v} onClick={() => { 
+            setChartView(v); 
+            setFadeKey(k => k + 1); 
+            setScrollX(0); 
+            setHoveredIndex(null); 
+            setClickedIndex(null); 
+            if (clickTimeoutRef.current) {
+              clearTimeout(clickTimeoutRef.current);
+              clickTimeoutRef.current = null;
+            }
+          }} style={{
             border: "none", background: chartView === v ? "#38b6ff" : "#f5f6f7", color: chartView === v ? "#fff" : "#2563eb", padding: "8px 16px", borderRadius: 12, fontWeight: 700, cursor: "pointer", boxShadow: chartView === v ? "0 2px 8px #38b6ff33" : "none"
           }}>{v}</button>
         ))}
