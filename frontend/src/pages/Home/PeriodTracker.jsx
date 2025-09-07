@@ -43,7 +43,16 @@ export default function PeriodTracker({ moodData, originalMoodData /*, ...otherP
 
   const calendarCells = [];
   for (let i = 0; i < firstDay; i++) {
-    calendarCells.push(<div key={`empty-${i}`} className="w-10 h-10" />);
+    calendarCells.push(
+      <div 
+        key={`empty-${i}`} 
+        style={{
+          aspectRatio: "1",
+          minWidth: 0,
+          background: "transparent"
+        }}
+      />
+    );
   }
 
   for (let d = 1; d <= daysInMonth; d++) {
@@ -56,11 +65,31 @@ export default function PeriodTracker({ moodData, originalMoodData /*, ...otherP
       <div
         key={d}
         onClick={() => setSelectedDate(dateStr)}
-        className={`w-10 h-10 flex items-center justify-center rounded-lg cursor-pointer text-sm
-          ${isNextPeriod ? "bg-red-300 text-white" : ""}
-          ${isFertile ? "bg-green-200" : ""}
-          ${hasMood ? "border-2 border-blue-400" : "border border-gray-200"}
-        `}
+        style={{
+          aspectRatio: "1",
+          minWidth: 0,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: 8,
+          cursor: "pointer",
+          fontSize: 12,
+          fontWeight: 600,
+          background: isNextPeriod ? "#fca5a5" : isFertile ? "#bbf7d0" : "#fff",
+          color: isNextPeriod ? "#fff" : "#374151",
+          border: hasMood ? "2px solid #3b82f6" : "1px solid #e5e7eb",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          transition: "all 0.2s ease"
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.transform = "scale(1.05)";
+          e.target.style.boxShadow = "0 4px 12px rgba(56,182,255,0.15)";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = "scale(1)";
+          e.target.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
+        }}
       >
         {d}
       </div>
@@ -68,7 +97,15 @@ export default function PeriodTracker({ moodData, originalMoodData /*, ...otherP
   }
 
   return (
-    <div className="p-6">
+    <div 
+      style={{
+        padding: 16,
+        maxWidth: "100%",
+        margin: "0 auto",
+        fontFamily: "'Canva Sans', sans-serif",
+        overflow: "hidden"
+      }}
+    >
       <h2 className="text-xl font-bold text-foreground mb-4">Period Tracker</h2>
 
       {/* Prediction Overview */}
@@ -84,13 +121,56 @@ export default function PeriodTracker({ moodData, originalMoodData /*, ...otherP
       </div>
 
       {/* Calendar */}
-      <div>
-        <div className="grid grid-cols-7 gap-1 mb-2 text-center text-xs font-medium text-gray-500">
-          {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
-            <div key={day}>{day}</div>
+      <div
+        style={{
+          background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+          border: "1px solid #e2e8f0",
+          borderRadius: 16,
+          padding: 16,
+          margin: "16px 0",
+          boxShadow: "0 4px 20px rgba(56,182,255,0.08)",
+          maxWidth: "100%",
+          overflow: "hidden"
+        }}
+      >
+        {/* Day headers */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(7, 1fr)",
+          gap: 4,
+          marginBottom: 12,
+          textAlign: "center"
+        }}>
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div 
+              key={day}
+              style={{
+                minWidth: 0,
+                height: 24,
+                borderRadius: 6,
+                background: "linear-gradient(135deg, #64748b 0%, #475569 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#fff",
+                fontSize: 10,
+                fontWeight: 600,
+                boxShadow: "0 1px 4px rgba(100,116,139,0.15)"
+              }}
+            >
+              {day}
+            </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-1">{calendarCells}</div>
+        
+        {/* Calendar grid */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(7, 1fr)",
+          gap: 3
+        }}>
+          {calendarCells}
+        </div>
       </div>
 
       {/* Selected Day Info */}

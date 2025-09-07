@@ -15,7 +15,7 @@ const universityOptions = [
 export default function SettingPage() {
   const [editing, setEditing] = useState(false);
   const [profilePic, setProfilePic] = useState('/default-profile.png');
-  const [username, setUsername] = useState('John Doe');
+  const [username, setUsername] = useState('Bella');
   const [university, setUniversity] = useState(universityOptions[0]);
   const [darkMode, setDarkMode] = useState(false);
   const [fontSize, setFontSize] = useState(false);
