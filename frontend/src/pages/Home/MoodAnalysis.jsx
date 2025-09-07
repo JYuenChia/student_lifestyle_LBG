@@ -196,7 +196,7 @@ export default function MoodAnalysis({ moodData }) {
   const [fadeKey, setFadeKey] = useState(0);
 
   // Chart sizing and layout
-  const chartWindowWidth = 340; // match Mood Insights blog width
+  const chartWindowWidth = 388; // match Mood Insights blog width
   const baseHeight = 388;       // match Mood Insights blog height
   const padding = 32;           // default padding
 
@@ -365,9 +365,9 @@ export default function MoodAnalysis({ moodData }) {
 
   // Compute a left label width based on the longest y label (approximation)
   const longestLabelChars = Math.max(...yAxisLabels.map(l => l.label.length));
-  const approxCharWidth = 7;
-  // Make y axis closer to label: reduce leftLabelWidth and plotPadding
-  const leftLabelWidth = Math.max(0, longestLabelChars * approxCharWidth); // was +2, now -6 for closer
+  const approxCharWidth = 5; // increased from 7 for more space
+  // Increase leftLabelWidth for more space so labels are not cut off
+  const leftLabelWidth = Math.max(0, longestLabelChars * approxCharWidth + 4); // add extra padding
   const plotPadding = padding + leftLabelWidth; // was -10, now -26 for even closer
 
   // compute a total chart width based on number of points (so we can scroll if many)
@@ -722,7 +722,8 @@ export default function MoodAnalysis({ moodData }) {
       return (
         <g key={value}>
           <text
-            x={axisPadding - leftLabelWidth + 2} // was -2, now +2 for tight alignment
+            // Move label further left for visibility
+            x={axisPadding - leftLabelWidth +20} // was +2, now -2 for more space
             y={y + 5} // was +4, now +5 for vertical centering
             textAnchor="end"
             fontSize="15"
@@ -883,7 +884,7 @@ export default function MoodAnalysis({ moodData }) {
       <h2 style={{ fontSize: 22, fontWeight: 800, color: "#2563eb", marginBottom: 12 }}>Mood Analysis</h2>
 
       {/* Summary */}
-      <div style={{ background: "#f5faff", padding: 14, borderRadius: 12, border: "1.5px solid #e0e3e7", display: "flex", gap: 12, marginBottom: 16, width: "100%" }}>
+      <div style={{ background: "#f5faff", padding: 14, borderRadius: 12, border: "1.5px solid #e0e3e7", display: "flex", gap: 12, marginBottom: 16 }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 700, color: "#2563eb" }}>{chartView === "Daily" ? "Today" : chartView === "Weekly" ? "This Week" : "This Month"}</div>
           <div style={{ marginTop: 6, fontSize: 15 }}>{latest?.label ?? "—"}</div>
@@ -892,7 +893,7 @@ export default function MoodAnalysis({ moodData }) {
               <>
                 <span style={{ marginRight: 8 }}>{latest.emoji || getMoodWord(latest.mood)}</span>
                 {getMoodWord(latest.mood)}
-                {currentHappyStreak > 1 && (<span style={{ fontSize: 12 }}> — {currentHappyStreak}-day streak <span role="img" aria-label="star">🌟</span><span style={{ marginLeft: 6 }}><PulseStar show={currentHappyStreak > 5} /></span></span>)}
+                {currentHappyStreak > 1 && (<> — {currentHappyStreak}-day streak <span role="img" aria-label="star">🌟</span><span style={{ marginLeft: 6 }}><PulseStar show={currentHappyStreak > 5} /></span></>)}
               </>
             ) : "No data"}
           </div>
@@ -909,19 +910,10 @@ export default function MoodAnalysis({ moodData }) {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 12, marginBottom: 16, justifyContent: "center", width: "100%" }}>
+      <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
         {["Daily", "Weekly", "Monthly"].map(v => (
           <button key={v} onClick={() => { setChartView(v); setFadeKey(k => k + 1); setScrollX(0); }} style={{
-            border: "none", 
-            background: chartView === v ? "#38b6ff" : "#f5f6f7", 
-            color: chartView === v ? "#fff" : "#2563eb", 
-            padding: "8px 16px", 
-            borderRadius: 12, 
-            fontWeight: 700, 
-            cursor: "pointer", 
-            boxShadow: chartView === v ? "0 2px 8px #38b6ff33" : "none",
-            minWidth: "80px",
-            textAlign: "center"
+            border: "none", background: chartView === v ? "#38b6ff" : "#f5f6f7", color: chartView === v ? "#fff" : "#2563eb", padding: "8px 16px", borderRadius: 12, fontWeight: 700, cursor: "pointer", boxShadow: chartView === v ? "0 2px 8px #38b6ff33" : "none"
           }}>{v}</button>
         ))}
       </div>
@@ -936,7 +928,8 @@ export default function MoodAnalysis({ moodData }) {
           display: "flex",
           flexDirection: "column",
           gap: 12,
-          width: "100%"
+          width: chartWindowWidth, // match chart width
+          margin: "0 auto"
         }}>
           <div style={{ fontWeight: 700, color: "#2563eb" }}>Mood Insights</div>
 
@@ -1150,3 +1143,4 @@ function PulseStar({ show }) {
     </span>
   ) : null;
 }
+
