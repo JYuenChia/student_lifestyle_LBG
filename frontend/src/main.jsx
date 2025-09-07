@@ -20,6 +20,7 @@ const NewPost = lazy(() => import('./pages/Discussion/NewPost.jsx'));
 const NewCommunity = lazy(() => import('./pages/Discussion/NewCommunity.jsx'));
 const SignUp = lazy(() => import('./pages/Registration/SignUp.jsx'));
 const Login = lazy(() => import('./pages/Registration/Login.jsx'));
+const MoodCycleChart = lazy(() => import('./pages/Home/MoodAnalysis.jsx'));
 
 import React from "react";
 
