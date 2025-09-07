@@ -7,7 +7,6 @@ import './index.css';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import BottomBar from './pages/bottomBar';
 import { PostsProvider } from './context/PostsContext.jsx';
-import MoodCycleChart from "./pages/Home/MoodCycleChart";
 
 // Lazy load all page components
 const MessagePage = lazy(() => import('./pages/Chat/Chat.jsx'));
